@@ -1,0 +1,6 @@
+library,issue,cls,corpus_says,trigger_tried,observed,tested
+RDFLib,3105,C3,'ex:' rewritten as 'ns1:',"bind a prefix, add a triple in that namespace, serialise as Turtle","output keeps the bound prefix ('ex:s ex:p ""v"" .'); no rewriting",rdflib 7.6.0 and 6.0.0
+RDFLib,3373,C8,extra namespace injected (JSON-LD),"bind two prefixes, add one triple, serialise as JSON-LD",output carries no @context and no injected namespace,rdflib 7.6.0
+RDFLib,3279,C9,XMLLiteral serialisation unfriendly,"XMLLiteral object, serialise as RDF/XML, re-parse",output is legal RDF/XML; re-parsing recovers the same term with the same datatype; no defective output observed,rdflib 7.6.0
+N3.js,660,C6,blank node split into two,"blank node used in subject and object position, Writer(Turtle)",the node appears as _:b0 in both positions and re-parses to the same graph,n3 2.7.2
+N3.js,578,C1,chunk-boundary parse failure across a language tag,not attempted,"the report describes a parser-side failure, not a writer-side one, so it is outside the scope of a writer baseline",-

@@ -1,0 +1,10 @@
+{
+  "name": "rdf-export-correctness-corpus",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Node dependencies for the corpus JavaScript probes (corpus/baseline/jsprobe.js).",
+  "license": "MIT",
+  "dependencies": {
+    "n3": "2.7.2"
+  }
+}

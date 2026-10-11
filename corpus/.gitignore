@@ -1,0 +1,3 @@
+# Keep compiled artefacts and caches out of the released corpus package.
+__pycache__/
+*.pyc

@@ -1,0 +1,3 @@
+# Dependencies for the §9.3 detection baseline (corpus/baseline/run_baseline.py).
+# The Node side is pinned in package.json (n3@2.7.2).
+rdflib==7.6.0

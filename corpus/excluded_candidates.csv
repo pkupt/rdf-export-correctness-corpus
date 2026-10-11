@@ -1,0 +1,9 @@
+library,issue,url,what_it_is,label,why_excluded
+Oxigraph,993,https://github.com/oxigraph/oxigraph/issues/993,did not use the default prefix -> more verbose but valid output,enhancement,not a correctness defect
+Oxigraph,1345,https://github.com/oxigraph/oxigraph/issues/1345,"the serialiser picks a shorter matching prefix, so the emitted local name has to carry '\/' instead of taking the longest-prefix form",bug,"the emitted 'myOntology:props\/name' resolves to the same IRI as 'myProperties:name', because the two prefixes are nested: the output is valid Turtle for the same graph, and the complaint is about compaction. Same rule as RDFLib 948 and Oxigraph 1121. Moved out of the corpus in the 2026-10-11 revision."
+Oxigraph,1121,https://github.com/oxigraph/oxigraph/issues/1121,parse/serialize not 1:1 for SPDX RDF/XML,question,"maintainer (Tpt) states the output is valid RDF/XML for the same graph, only not pretty -> excluded"
+Oxigraph,1543,https://github.com/oxigraph/oxigraph/issues/1543,no JSON-LD compaction / remote context for RO-Crate,enhancement,"capability gap (feature request), not a defect"
+dotNetRDF,10,https://github.com/dotnetrdf/dotnetrdf/issues/10,Compressing Turtle Writer did not compress collections/base URIs,enhancement,output is semantically equivalent; compression quality only
+dotNetRDF,34,https://github.com/dotnetrdf/dotnetrdf/issues/34,avoid WriteRaw() on XML writers,enhancement,code hygiene / hardening; no concrete defect instance
+jsonld.js,584,https://github.com/digitalbazaar/jsonld.js/issues/584,prototype pollution via @id '__proto__' in jsonld.flatten(),security,"security; not counted in the C1-C10 totals; carried as a side finding (reproduced this revision, still live on 9.0.0)"
+RDFLib,948,https://github.com/RDFLib/rdflib/issues/948,prefixed names do not allow escaping,enhancement,"maintainer (aucampia) re-classified it: the output is valid Turtle, it just does not shorten to a PName -> excluded"
