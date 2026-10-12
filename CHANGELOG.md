@@ -5,6 +5,13 @@ history was carried inside the manuscript, as a note on the title block; from
 v1.14 it lives here, so that the released manuscript reads as a finished paper
 and not as a working draft with its edit log attached.
 
+## v1.17 - 2026-10-12
+
+- §10 gains a "Use of language models" note: a language model ran the
+  annotation pre-check named in §5 and was a writing aid for the prose. It is
+  disclosed on the paper's own standard, because the annotation use was already
+  named while the writing use was not.
+
 ## v1.16 - 2026-10-12
 
 - §2.7 no longer states that a systematic search is "a prerequisite for

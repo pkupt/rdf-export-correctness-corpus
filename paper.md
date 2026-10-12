@@ -498,6 +498,8 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 **Ethics.** Everything here is expressed as a report about a pipeline; we did not attempt to exploit the injection surface, and the security-relevant records in the corpus are public issues that predate this work. The corpus contains no private or customer data, and no claim in it rests on non-public information.
 
+**Use of language models.** A language model ran the in-house annotation pre-check named in §5 and was a writing aid for the prose; the screening, the classifications, the judgements and any remaining error are the author's.
+
 ---
 
 ## 11 Reproducibility and artefacts
