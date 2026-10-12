@@ -10,7 +10,7 @@ Preprint · 2026-10-12
 
 ## Abstract
 
-Export is the last step of a knowledge-graph pipeline before its output leaves the process, and it fails quietly: the pipeline reports success, the file parses, and the graph is wrong in a way that surfaces only downstream. We screen seven general-purpose RDF and JSON-LD libraries across five languages and assemble 24 defect records from six of them, each anchored to a public issue, reproduced where possible. Three were closed by maintainers without a fix and one is flagged as possibly outside the inclusion rule, so the corpus is reported three ways: 24, a headline of 21, and a conservative 20. The authors' own project is excluded from every count and reported as a case study.
+Export is the last step of a knowledge-graph pipeline before its output leaves the process, and it fails quietly: the pipeline reports success, the file parses, and the graph is wrong in a way that surfaces only downstream. We screen seven general-purpose RDF and JSON-LD libraries across five languages and assemble 24 defect records from six of them, each anchored to a public issue, reproduced where possible. Three were closed by maintainers without a fix and one is flagged as possibly outside the inclusion rule, so the corpus is reported three ways: 24, a headline of 21, and a conservative 20. The author's own project is excluded from every count and reported as a case study.
 
 From the corpus we derive a ten-class typology with operational criteria, on two axes (what is wrong, and at which write point) over three tiers: output the parser rejects, output that is well-formed but mislabelled, and output that opens an injection surface. Writers emit output their own parsers reject, in one case across a version boundary we located by running both versions. Malformed output can leave the process with a success status. And de-biasing the pool empties one defect class entirely, a property of the pool, not the world.
 
@@ -225,7 +225,7 @@ The table counts what was executed, not what is still broken: four of the thirte
 
 One executed record and one side probe are worth separating from the rest. The executed record located a version boundary: RDFLib #1395 emits a prefixed name its own parser rejects on 6.0.0 and escapes it correctly from 6.3.2 onward, so the defect is provably live on one released version and provably fixed on another. The side probe is jsonld.js #584, a prototype-pollution path still live in jsonld 9.0.0; it concerns the security of the processing path rather than the correctness of the written output, so it sits outside the corpus and is recorded here as a note rather than as a record.
 
-The other twelve executed records were run on 2026-09-02, in a prior revision of this corpus, and are carried over with the version information in their `runtime_repro` column. Their scripts are not part of this release; of the thirteen executions, only the RDFLib #1395 run above was performed for this revision, the jsonld.js #584 probe being outside the corpus. A reader re-running the release therefore reproduces one of the thirteen executions directly and has to reconstruct the other twelve from the protocol's provenance note and the earlier report. Separately from that count, the 2026-10-10 measurement (§9.3) re-executed eight of the twelve inherited records (four in the gate measurement, four in the re-test), and those runs confirmed or failed to confirm the recorded behaviour without producing a new `runtime_repro` verdict; the count of thirteen executions and its provenance are unchanged. The JavaScript records are pinned at `n3@2.7.2` (2026-09-01); a cross-version check against the current release, `n3@2.13.12` (2026-10-10), is recorded in `baseline/BASELINE.md` and confirms that the two JavaScript writer defects are still written, and still rejected by the writer's own parser, on `latest`.
+The other twelve executed records were run on 2026-09-02, in a prior revision of this corpus, and are carried over with the version information in their `runtime_repro` column. Their scripts are not part of this release; of the thirteen executions, only the RDFLib #1395 run above was performed for this revision, the jsonld.js #584 probe being outside the corpus. A reader re-running the release therefore reproduces one of the thirteen executions directly and has to reconstruct the other twelve from the protocol's provenance note and the earlier report. Separately from that count, the 2026-10-10 measurement (§9.3) re-executed eight of the twelve inherited records (four in the gate measurement, four in the re-test), and those runs confirmed or failed to confirm the recorded behaviour without producing a new `runtime_repro` verdict; the count of thirteen executions and its provenance are unchanged. The JavaScript records are pinned at `n3@2.7.2` (2026-09-01); a cross-version check against the current release, `n3@2.13.12` (2026-10-10), is recorded in `corpus/baseline/BASELINE.md` and confirms that the two JavaScript writer defects are still written, and still rejected by the writer's own parser, on `latest`.
 
 ### 4.4 Withdrawals, exclusions and maintainer closures
 
@@ -436,7 +436,7 @@ The first three compose into a single gate a project can run over its own export
 
 | Component | Status | Evidence |
 |---|---|---|
-| Conformance layer over the corpus | **run, 5 records** | §9.3; per-record verdicts in `baseline/baseline_gates.csv` |
+| Conformance layer over the corpus | **run, 5 records** | §9.3; per-record verdicts in `baseline_gates.csv` |
 | In-memory fidelity layer over the corpus | **run, applicable to 2** | §9.3 |
 | Source-fidelity layer over the corpus | **run, applicable to 2** | §9.3 |
 | Baseline on the remaining 19 records | **not run** | no JVM, Cargo or .NET SDK locally, and the records inherited from the 2026-09-02 pass were not recorded with the construction that reproduces them |
@@ -496,7 +496,7 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 **Conclusion validity — baseline numbers cover five records and no agreement figures exist.** §9.3 reports the baseline on the five records the local toolchains could bring into a defective state, so the numbers describe those five and nothing wider; the other nineteen are unmeasured, and the three observations drawn from the table inherit that scope. Two of the five sit outside the headline on the three-way reading of §4.1 and a third carries the flag, which §9.3 accounts for rather than leaving to the reader. No inter-annotator agreement study has been run.
 
-**Ethics.** Everything here is expressed as a report about a pipeline; we did not attempt to exploit the injection surface, and the one security-relevant record in the corpus is a public issue that predates this work. The corpus contains no private or customer data, and no claim in it rests on non-public information.
+**Ethics.** Everything here is expressed as a report about a pipeline; we did not attempt to exploit the injection surface, and the security-relevant records in the corpus are public issues that predate this work. The corpus contains no private or customer data, and no claim in it rests on non-public information.
 
 ---
 
@@ -509,13 +509,13 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 | `excluded_candidates.csv` | the 8 excluded candidates and the rule that excluded each |
 | `withdrawn_records.csv` | the 4 records withdrawn in this revision and the reason for each — all read-side defects (§4.4) |
 | `screening_protocol.md` | §3 as a standalone document, including the decision log |
-| `repro/` | two scripts: `rdflib_1395.py`, which reproduces a corpus record and pins its version boundary, and `jsonld_584.js`, which reproduces a side probe outside the corpus. The other twelve executed records were run in the 2026-09-02 prior revision; their scripts are not part of this release (§4.3). |
+| `corpus/repro/` | two scripts: `rdflib_1395.py`, which reproduces a corpus record and pins its version boundary, and `jsonld_584.js`, which reproduces a side probe outside the corpus. The other twelve executed records were run in the 2026-09-02 prior revision; their scripts are not part of this release (§4.3). |
 | `build_corpus.py` | the script that generates all four CSVs from the tables it contains; the CSVs are its output and are not hand-edited |
 | `references.bib` | the bibliography of References in BibTeX form, one entry per cited work |
 | `corpus/requirements.txt` | pinned Python dependencies for the reproduction and baseline scripts |
 | `corpus/package.json` | pinned Node dependencies for the JavaScript probe and the baseline |
-| `baseline/` | the baseline measurement of §9.3: `run_baseline.py` and `jsprobe.js`, their output tables (`baseline_gates.csv`, `re_test_not_reproduced.csv`), and `BASELINE.md`, which records the definition of every gate and the tool versions |
-| `figures/` | `make_figure1.py` generates `figure1_class_by_library.svg` (Figure 1) from `corpus_cross_library.csv`; re-run it after any change to the CSV so the figure cannot drift from the data. |
+| `corpus/baseline/` | the baseline measurement of §9.3: `run_baseline.py` and `jsprobe.js`, their output tables (`baseline_gates.csv`, `re_test_not_reproduced.csv`), and `BASELINE.md`, which records the definition of every gate and the tool versions |
+| `corpus/figures/` | `make_figure1.py` generates `figure1_class_by_library.svg` (Figure 1) from `corpus_cross_library.csv`; re-run it after any change to the CSV so the figure cannot drift from the data. |
 
 All artefacts are released publicly at https://github.com/pkupt/rdf-export-correctness-corpus — the code under MIT, the paper and the corpus data under CC BY 4.0. The repository carries this manuscript, the four corpus tables, the screening protocol, the detection baseline and the reproduction scripts.
 
@@ -616,6 +616,5 @@ Counts: 24 records, 6 libraries, 5 languages. Excluding the three records their 
 - Corpus and protocol (released with this paper): `corpus/` — `corpus_cross_library.csv`, `corpus_semantica_case.csv`, `excluded_candidates.csv`, `withdrawn_records.csv`, `screening_protocol.md`, `repro/`.
 - Prior corpus (19 cross-library records, verified 2026-09-02): earlier internal working notes and reproduction report, not released; the 2026-09-02 pass is the screening event for those records, and its runs are recorded in the `runtime_repro` column.
 - Case-study fix attributions (author and merge date of every fix pull request): read from the GitHub API against `semantica-agi/semantica` issue timelines and pull requests on 2026-10-10.
-- arXiv endorsement policy: https://info.arxiv.org/help/endorsement.html
 
-> Issue numbers, maintainer replies, fix-PR attributions, version boundaries and reproduction outputs are taken from GitHub API queries and local runs on 2026-10-10; the issue `state` values were queried a day later, on 2026-10-11, and Appendix A names that date with the column. The class assignments, criteria and judgements are the authors' reading of that material. Items marked pending are not yet complete and are not conclusions.
+> Issue numbers, maintainer replies, fix-PR attributions, version boundaries and reproduction outputs are taken from GitHub API queries and local runs on 2026-10-10; the issue `state` values were queried a day later, on 2026-10-11, and Appendix A names that date with the column. The class assignments, criteria and judgements are the author's reading of that material. Items marked pending are not yet complete and are not conclusions.
