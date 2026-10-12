@@ -103,7 +103,7 @@ Adjacent work includes evidence-carrying validation for knowledge graphs (Fierro
 
 ### 2.7 The gap we are addressing
 
-We are not aware of a published corpus of export defects that simultaneously (a) names the libraries, (b) anchors every record to a public issue, (c) publishes the screening protocol including rejections, and (d) reports which records were actually executed. That combination is what this paper contributes. A systematic search to confirm or refute this statement is a prerequisite for submission and is listed as pending.
+We are not aware of a published corpus of export defects that simultaneously (a) names the libraries, (b) anchors every record to a public issue, (c) publishes the screening protocol including rejections, and (d) reports which records were actually executed. That combination is what this paper contributes. A quick search of arXiv, OpenAlex and Crossref (2026-10-12; DBLP and Semantic Scholar not covered) did not surface a published corpus of the same kind; a systematic search remains future work.
 
 ---
 

@@ -5,6 +5,13 @@ history was carried inside the manuscript, as a note on the title block; from
 v1.14 it lives here, so that the released manuscript reads as a finished paper
 and not as a working draft with its edit log attached.
 
+## v1.16 - 2026-10-12
+
+- §2.7 no longer states that a systematic search is "a prerequisite for
+  submission". It reports the quick search that was run — arXiv, OpenAlex and
+  Crossref (2026-10-12), with DBLP and Semantic Scholar not covered — and keeps
+  the systematic search as future work. The gap claim itself is unchanged.
+
 ## v1.15 - 2026-10-12
 
 Pre-submission corrections to the released manuscript. No count moves, and the
@@ -12,8 +19,9 @@ corpus, the four tables and Figure 1 are untouched.
 
 - Appendix B no longer carries the arXiv endorsement-policy URL; it was a
   submission-preparation note, not a source for the paper's content.
-- The Ethics paragraph in §10 states that the corpus carries two
-  security-relevant records, not one (N3.js #659 and #166).
+- The Ethics paragraph in §10 is restated in the plural, matching the two
+  security-relevant records the corpus carries (N3.js #659 and #166), instead
+  of "the one security-relevant record".
 - The possessive in the abstract and Appendix B is made singular, matching the
   paper's single author ("the author's").
 - §9.1 and §11 give full `corpus/...` paths for the baseline, figures and
