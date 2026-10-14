@@ -16,7 +16,7 @@ This repository holds the corpus and the artefacts for the manuscript in
 | [`paper.md`](paper.md) | The manuscript. |
 | [`references.bib`](references.bib) | The bibliography of the manuscript in BibTeX: one entry for every work cited in §2, mirroring the References section of `paper.md`. |
 | [`corpus/`](corpus/) | The corpus, the screening protocol and the generation script. [`corpus/README.md`](corpus/README.md) describes every file in it. |
-| [`corpus/corpus_cross_library.csv`](corpus/corpus_cross_library.csv) | 24 defect records across 6 third-party libraries and 5 languages (7 libraries were screened; Apache Jena carries no admitted record). |
+| [`corpus/corpus_cross_library.csv`](corpus/corpus_cross_library.csv) | 21 defect records across 5 third-party libraries and 5 languages (7 libraries were screened; Apache Jena carries no admitted record). |
 | [`corpus/corpus_semantica_case.csv`](corpus/corpus_semantica_case.csv) | 11 first-party case-study records, kept out of every cross-library count. |
 | [`corpus/excluded_candidates.csv`](corpus/excluded_candidates.csv) | 8 screened-out candidates and the reason for each. |
 | [`corpus/withdrawn_records.csv`](corpus/withdrawn_records.csv) | 4 records admitted in an earlier revision and withdrawn in this one, kept for audit rather than deleted. |
@@ -27,10 +27,10 @@ This repository holds the corpus and the artefacts for the manuscript in
 
 ## Headline counts
 
-24 records, 6 contributing libraries (of 7 screened), 5 languages. Three records (RDF4J #5521,
+21 records, 5 contributing libraries (of 7 screened), 5 languages. Three records (RDF4J #5521,
 N3.js #659 and #165) were closed by their maintainers without a fix, so the headline is
-reported three ways: **24** with them, a headline of **21** without them, and a most
-conservative reading of **20** once the flagged record (RDFLib #3443, admission unsettled) is
+reported three ways: **21** with them, a headline of **18** without them, and a most
+conservative reading of **17** once the flagged record (RDFLib #3443, admission unsettled) is
 removed as well. See §4.4 of the manuscript.
 
 ## Regenerating the tables
@@ -48,8 +48,7 @@ commands are in [`corpus/README.md`](corpus/README.md).
 
 ## Scope and limits
 
-13 of the 24 records were executed locally; the other 11 are labelled `not run`: ten for lack
-of a JVM, Cargo or .NET SDK, and one whose fix predates the runnable line. Four records did
+19 of the 21 records were executed locally; the other 2 are labelled `not run`. Four records did
 not reproduce under the construction reconstructed for them. No second annotator has been
 used yet. All samples come from public issue trackers; no private or customer data is
 included. These limits are stated in the manuscript as well, and are repeated here so that the

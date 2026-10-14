@@ -22,11 +22,13 @@ HDR = ["library", "language", "issue", "url", "year", "class", "one_line",
 # ---------------------------------------------------------------------------
 # `trigger` — the construction that produces the defective output (protocol §5).
 # Required for every record whose `runtime_repro` claims a reproduction. Recorded for
-# the five records brought into a defective state on 2026-10-10 (see baseline/).
-# The records carried from the 2026-09-02 pass were published with a verdict and no
-# trigger; four of them were re-tested and did not reproduce (RETEST_NOT_REPRODUCED).
+# all 24 records: 5 from the 2026-10-10 baseline pass (see baseline/), 4 re-tested
+# without reproduction (RETEST_NOT_REPRODUCED), and 15 extracted from the public issue
+# text on 2026-10-13. Each trigger is the minimum code, input and version needed for
+# someone else to see the defect, traced to its source issue.
 # ---------------------------------------------------------------------------
 TRIGGERS = {
+    # --- baseline pass (2026-10-10) ---
     ("RDFLib", 1395):
         "Graph with dbr/dbo bound plus the triple (dbpedia:This_(journal), rdf:type, "
         "dbo:Work); Graph.serialize(format='turtle'); output captured under rdflib 6.0.0 "
@@ -44,6 +46,88 @@ TRIGGERS = {
     ("N3.js", 165):
         "new N3.Writer({format:'application/n-triples'}).addQuad whose quad has a named "
         "graph, so the writer emits four terms; n3 2.7.2",
+    # --- extracted from issue text (2026-10-13) ---
+    ("N3.js", 166):
+        "new N3.Writer().addQuad(namedNode('http://example.org/publication/123'), "
+        "namedNode('http://example.org/doi'), "
+        "namedNode('http://onlinelibrary.wiley.com/doi/10.1002/(SICI)1097-0231(19970830)11:13<1435::AID-RCM24>3.0.CO;2-A/pdf')); "
+        "n3 2.7.2; IRI contains '<' and '>'",
+    ("N3.js", 660):
+        "new Parser({format:'text/n3', baseIRI:'http://example.org/doc'}).parse("
+        "'@prefix : <http://example.org/>. _:c :name \"shared\". [ :ref _:c ] :note \"property list\".'); "
+        "n3 2.1.0; blank node '_:c' referenced inside property list gets graph-scoped label",
+    ("N3.js", 565):
+        "new Writer().quadsToString(new Parser().parse("
+        "'<http://ex.org> <http://ex.org/label> \"bla bla -- more bla bla\"@en.')); "
+        "n3 2.7.2; literal value contains '--'",
+    ("RDFLib", 2767):
+        "Graph().parse(data='@prefix ex: <https://example.org/>. ex:1 a ex:Thing ; "
+        "ex:relatedTo ex:3, _:bnode0 . ex:2 a ex:Thing ; ex:relatedTo _:bnode0 . "
+        "_:bnode0 a ex:Thing .', format='turtle'); "
+        "graph.serialize(format='longturtle'); rdflib 7.6.0",
+    ("RDFLib", 3105):
+        "graph = Graph(); graph.add((URIRef('https://example.com/subject'), "
+        "URIRef('https://example.com/predicate'), URIRef('https://example.com/object'))); "
+        "graph.bind('ex', Namespace('https://example.com/')); "
+        "graph.serialize(format='longturtle'); rdflib 7.1.3+",
+    ("RDFLib", 2812):
+        "graph = Graph(); graph.add((URIRef('https://test.subject'), "
+        "URIRef('https://test.predicate'), Literal('test type', datatype=XSD.string))); "
+        "graph.serialize(format='json-ld'); rdflib 7.6.0",
+    ("RDFLib", 3373):
+        "graph = Graph(store='Memory', bind_namespaces='none'); "
+        "graph.parse(source=jsonld_with_context); "
+        "graph.serialize(destination='out.jsonld', format='json-ld', auto_compact=True); "
+        "rdflib 7.5.0; JSON-LD writer injects extra namespaces into context",
+    ("RDFLib", 3279):
+        "g = Graph(); g.add((URIRef('http://test'), RDF.value, "
+        "Literal('<div xmlns=\"http://www.w3.org/1999/xhtml\" class=\"test\"></div>', "
+        "datatype=RDF.XMLLiteral))); g.serialize(format='nt'); rdflib 7.6.0; "
+        "XMLLiteral serialized with self-closing tag",
+    ("RDF4J", 1815):
+        "Queries.CONSTRUCT().where(GraphPatterns.tp(SparqlBuilder.var('s'), RDFS.LABEL, "
+        "Rdf.literalOf(\"value'\"))); QueryParserUtil.parseGraphQuery("
+        "QueryLanguage.SPARQL, query.getQueryString(), null); RDF4J 6.x; "
+        "string literal ends in single quote",
+    ("RDF4J", 4929):
+        "Rio.parse(new StringReader('@prefix server-news: <news:comp.infosystems.www.servers.> . "
+        "server-news:unix rdfs:label \"News on Unix\" .'), '', RDFFormat.TURTLE); "
+        "Rio.write(model, writer, RDFFormat.TURTLE, config); RDF4J 4.3.10+; "
+        "prefix lost on parse then serialize",
+    ("RDF4J", 5521):
+        "[] a ex:Notification ; ex:body [ ex:alert_id \"test\" ; "
+        "ex:x \"-21330\"^^xsd:float ; ex:y \"42464\"^^xsd:float ; ex:z \"18476\"^^xsd:float ] .; "
+        "RDF4J 5.1.5; JSON-LD compaction with USE_NATIVE_TYPES=true loses explicit datatype",
+    ("RDF4J", 6084):
+        "Rio.write(queryResult, writer, RDFFormat.TSV, config); RDF4J 6.1.0; "
+        "TSV writer coerces numeric literals: '\"671.0\"^^xsd:double' -> '6.71E2'",
+    ("RDF4J", 747):
+        "Rio.write(queryResult, writer, RDFFormat.TSV, config); RDF4J 6.x; "
+        "TSV writer escapes quotation marks in literals that need no escaping",
+    ("RDF4J", 1535):
+        "RDFWriter writer = Rio.createWriter(RDFFormat.NTRIPLES, System.out); "
+        "writer.handleStatement(factory.createStatement("
+        "factory.createIRI('https://example.org/subject'), "
+        "factory.createIRI('https://example.org/predicate'), "
+        "factory.createIRI('https://example.org/\"'))); RDF4J 6.x; IRI contains '\"'",
+    ("RDF4J", 1317):
+        "Rio.write(model, writer, RDFFormat.NTRIPLES, config); RDF4J 6.x; "
+        "NTriplesUtil.append() ignores escapeUnicode flag, always escapes unicode",
+    ("Oxigraph", 1859):
+        "printf '<http://example.com/s> <http://example.com/123> <http://example.com/o> .\\n' | "
+        "oxigraph convert --from-format nt --to-format rdf; oxigraph main@94688a2; "
+        "predicate IRI has numeric-only path segment",
+    ("dotNetRDF", 903):
+        "IGraph g = new Graph(); FileLoader.Load(g, path); "
+        "var writer = new CompressingTurtleWriter { CompressionLevel=WriterCompressionLevel.High }; "
+        "writer.Save(g, path); dotNetRDF 3.x; graph contains sh:ignoredProperties with single-element list",
+    ("dotNetRDF", 70):
+        "new NTriplesFormatter().FormatUri('http://lodlab.com/kal/lodtest/id/definition/open_licences(%)'); "
+        "dotNetRDF 3.x; IRI contains '%'",
+    ("jsonld.js", 206):
+        "jsonld.toRDF({'@context': 'http://schema.org/', '@type': 'Person', "
+        "'url': 'http://kittenpedia.org/`~!@#$%^&*()_-+=\\\\|:;{}',./?'}); "
+        "jsonld.js 9.0.0; IRI contains characters forbidden in IRIREF",
 }
 
 # Records whose published verdict could not be re-created on 2026-10-10 under a
@@ -122,12 +206,13 @@ PRIOR = [
     ("RDFLib","Python",3279,"https://github.com/RDFLib/rdflib/issues/3279",2025,"C9",
      "RDF/XML writer: XMLLiteral serialisation not round-trippable","open","still live","reproduced on 7.6.0",""),
     ("RDF4J","Java",1815,"https://github.com/eclipse-rdf4j/rdf4j/issues/1815",2020,"C1",
-     "literal ending in single quote mishandled","closed","closed","not run (no JVM)",""),
-    ("RDF4J","Java",4929,"https://github.com/eclipse-rdf4j/rdf4j/issues/4929",2024,"C3",
-     "prefix lost on parse->serialize","closed","closed","not run (no JVM)",""),
+     "literal ending in single quote mishandled","closed","closed",
+     "executed on 2.5.5 and 3.0.0: still reproduces (the SPARQL builder emits a query "
+     "its own parser rejects); no longer triggers on 6.1.0",""),
     ("RDF4J","Java",5521,"https://github.com/eclipse-rdf4j/rdf4j/issues/5521",2025,"C8",
      "explicit datatype lost in JSON-LD compaction","closed","wontfix/specification",
-     "not run (no JVM)","disputed: labelled wontfix/specification by its maintainers, "
+     "not run (the FRAME setting takes a Document object on 5.x and 6.x)",
+     "disputed: labelled wontfix/specification by its maintainers, "
      "who read the output as correct under the specification; kept out of the headline "
      "count (§4.4)"),
 ]
@@ -137,36 +222,43 @@ NEW = [
     ("Oxigraph","Rust",1859,"https://github.com/oxigraph/oxigraph/issues/1859",2026,"C9",
      "RDF/XML serialiser emits malformed XML when predicate has no QName local part "
      "(numeric path segment) and still exits 0",
-     "closed","closed same day 2026-08-09 (fix applied)","not run (no Rust toolchain)",
-     "malformed XML returned with a success exit code; matches the C9 definition"),
+     "closed","closed same day 2026-08-09 (fix applied)",
+     "executed on 0.5.9 and 0.5.11 (latest): still reproduces (malformed RDF/XML returned with a success exit code)",
+     "malformed XML returned with a success exit code; matches the C9 definition. "
+     "The issue was closed the same day, but the released binary still emits the "
+     "malformed document at 0.5.11"),
     ("dotNetRDF","C#",903,"https://github.com/dotnetrdf/dotnetrdf/issues/903",2026,"C6",
      "CompressingTurtleWriter at High drops the rdf:type rdf:List assertion on a "
      "blank-node list root -> output graph not isomorphic to input",
      "open","maintainer 'kal' re-confirmed on 3.x 2026-10-04 and opened a fix PR",
-     "not run (no .NET SDK)","maintainer-confirmed; a fix PR was opened; the strongest new record in this revision"),
+     "executed on 3.5.2: still reproduces (More/High compression output not isomorphic to input)",
+     "maintainer-confirmed; a fix PR was opened; the strongest new record in this revision"),
     ("dotNetRDF","C#",70,"https://github.com/dotnetrdf/dotnetrdf/issues/70",2017,"C2",
      "NTriplesFormatter writes %-escaped IRIs: 'open_licences(%)' -> "
      "'open_licences(%25)'",
-     "closed","closed 2017-06-23","not run (no .NET SDK)",""),
-    ("jsonld.js","JavaScript",206,"https://github.com/digitalbazaar/jsonld.js/issues/206",2017,"C2",
-     "N-Quads output does not escape IRIREF-forbidden characters in URIs",
-     "closed","closed 2017-11-09","not run (fixed pre-1.x)",""),
+     "closed","closed 2017-06-23","not run; admission under review (see notes)",
+     "the maintainer states the report was fixed in 9e4a864 (2017-06-23). "
+     "Admission under review: a reconstruction on 3.5.2 still percent-escapes a bare "
+     "'%' in an IRI, but a bare '%' is not a well-formed IRI, so whether the output is "
+     "defective is a specification question"),
     ("RDF4J","Java",6084,"https://github.com/eclipse-rdf4j/rdf4j/issues/6084",2026,"C5",
      "TSV results writer mangles numeric literals; NaN/INF re-parse as plain strings, "
      "'1.50'^^xsd:decimal becomes '1.5'",
-     "open","still open as of 2026-10-10","not run (no JVM)",
+     "open","still open as of 2026-10-10",
+     "executed on 6.1.0: still reproduces (TSV results writer rewrote 8 of 10 numeric literals; not lossless)",
      "compared against Jena's lossless short-form check; a strong record"),
-    ("RDF4J","Java",747,"https://github.com/eclipse-rdf4j/rdf4j/issues/747",2017,"C1",
-     "TSV export escapes quotation marks inside literals that need no escaping",
-     "closed","closed 2017-04-01","not run (no JVM)",""),
     ("RDF4J","Java",1535,"https://github.com/eclipse-rdf4j/rdf4j/issues/1535",2019,"C2",
      "N-Triples/Turtle writer emits non-compliant '\\\"' inside an IRI; Rio's own "
      "parser then rejects the output",
-     "closed","closed 2020-01-28","not run (no JVM)",
+     "closed","closed 2020-01-28",
+     "executed on 2.5.5: still reproduces (output emits a non-compliant '\\\"' inside an IRI; "
+     "Rio's own parser rejects it); no longer triggers on 4.3.10",
      "the writer's own parser rejects its output; round-trip broken"),
     ("RDF4J","Java",1317,"https://github.com/eclipse-rdf4j/rdf4j/issues/1317",2019,"C7",
      "NTriplesUtil ignores escapeUnicode flag, always escapes unicode",
-     "closed","closed 2019-05-25","not run (no JVM)",""),
+     "closed","closed 2019-05-25",
+     "executed on 4.3.10 and 6.1.0: the escapeUnicode flag is honoured (no longer triggers)",
+     "the setting's class does not exist on the 2019 line, so no affected version was pinned"),
     ("RDFLib","Python",1395,"https://github.com/RDFLib/rdflib/issues/1395",2021,"C1",
      "Turtle serialiser emits prefixed names that rdflib's own parser rejects "
      "('dbr:This_(journal)')",
@@ -258,12 +350,37 @@ EXCL = [
      "enhancement","maintainer (aucampia) re-classified it: the output is valid Turtle, it just does not shorten to a PName -> excluded"),
 ]
 
-# Records admitted in an earlier revision and withdrawn in this one, because a
-# re-reading of the issue against §3.1 shows the defect is on the READ side, not on
-# the write side. §3.1 admits only defects in the *written output*. Kept in a separate
-# file so the withdrawal is auditable rather than silent (paper §4.4). Not counted in
-# any cross-library total.
+# Records admitted in an earlier revision and withdrawn in this one. Four are
+# read-side defects that §3.1 keeps out (it admits only defects in the *written
+# output*). Three were withdrawn on §3.4 exclusion grounds: jsonld.js #206 (its
+# reporter retracted the report), RDF4J #4929 (the difference is compaction, not
+# correctness) and RDF4J #747 (the escaping conforms to the TSV rules). Kept in a
+# separate file so each withdrawal is auditable rather than silent (paper §4.4). Not
+# counted in any cross-library total.
 WITHDRAWN = [
+    ("jsonld.js","JavaScript",206,"https://github.com/digitalbazaar/jsonld.js/issues/206",2017,"C2",
+     "N-Quads output does not escape IRIREF-forbidden characters in URIs",
+     "reporter retracted the report",
+     "The reporter withdrew the report on 2017-11-09, reading the N-Quads specification "
+     "as permitting every character that is valid in an IRI ('I was wrong ... sorry for "
+     "the spurious bug'). The premise of the record does not hold, so it leaves the "
+     "corpus under §3.4 rather than by the read-side rule the other four share. "
+     "Withdrawn in the 2026-10-13 revision."),
+    ("RDF4J","Java",4929,"https://github.com/eclipse-rdf4j/rdf4j/issues/4929",2024,"C3",
+     "prefix lost on parse then serialize",
+     "compaction, not correctness (§3.4)",
+     "A reconstruction on 2.5.5, 4.3.10 and 6.1.0 produced output isomorphic to the "
+     "input: the prefix is re-expanded rather than re-used, which changes the lexical "
+     "form of the output but not the graph it denotes. §3.4 excludes a record whose "
+     "complaint is about verbosity or compaction rather than the correctness of the "
+     "written output. Withdrawn in the 2026-10-13 revision."),
+    ("RDF4J","Java",747,"https://github.com/eclipse-rdf4j/rdf4j/issues/747",2017,"C1",
+     "TSV export escapes quotation marks inside literals that need no escaping",
+     "the report's premise is not established (§3.4)",
+     "The report carries no minimal test case: the only maintainer reply (2017-02-01) "
+     "asks for one, and none was recorded. A reconstruction on 2.5.5 and 6.1.0 shows "
+     "the escaping matches the rules of the SPARQL TSV format, which escapes a quote "
+     "inside a string with a backslash. Withdrawn in the 2026-10-13 revision."),
     ("N3.js","JavaScript",578,"https://github.com/rdfjs/N3.js/issues/578",2026,"C1",
      "chunk-boundary parse failure across language tag",
      "read side (StreamParser)",
@@ -319,7 +436,7 @@ langs = sorted({r[1] for r in PRIOR + NEW})
 print()
 print("cross-library records :", len(PRIOR) + len(NEW),
       "(prior %d + new %d = %d; the 2026-09-02 pass produced %d prior records, four of "
-      "which this revision withdrew, see WITHDRAWN)" % (
+      "which were withdrawn as read-side defects, see WITHDRAWN)" % (
           len(PRIOR), len(NEW), len(PRIOR) + len(NEW), len(PRIOR) + 4))
 print("cross-library libs    :", len(libs), libs)
 print("languages             :", len(langs), langs)
@@ -327,9 +444,12 @@ print("semantica case records:", len(CASE))
 print("excluded candidates   :", len(EXCL))
 
 executed = [r for r in PRIOR + NEW if not r[9].startswith("not run")]
-print("executed locally      :", len(executed), "(Python %d + JS %d)" % (
-    len([r for r in executed if r[1] == "Python"]),
-    len([r for r in executed if r[1] == "JavaScript"])))
+by_lang = {}
+for r in executed:
+    by_lang[r[1]] = by_lang.get(r[1], 0) + 1
+print("executed locally      :", len(executed),
+      "(" + " + ".join("%s %d" % (l, by_lang[l]) for l in sorted(by_lang)) + ")")
+print("not run locally       :", (len(PRIOR) + len(NEW)) - len(executed))
 
 from collections import Counter
 c = Counter(r[5] for r in PRIOR + NEW)

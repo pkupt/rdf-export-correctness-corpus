@@ -4,17 +4,17 @@
 
 Qian Zhang (Independent researcher)
 
-Preprint · 2026-10-12
+Preprint · 2026-10-13
 
 ---
 
 ## Abstract
 
-Export is the last step of a knowledge-graph pipeline before its output leaves the process, and it fails quietly: the pipeline reports success, the file parses, and the graph is wrong in a way that surfaces only downstream. We screen seven general-purpose RDF and JSON-LD libraries across five languages and assemble 24 defect records from six of them, each anchored to a public issue, reproduced where possible. Three were closed by maintainers without a fix and one is flagged as possibly outside the inclusion rule, so the corpus is reported three ways: 24, a headline of 21, and a conservative 20. The author's own project is excluded from every count and reported as a case study.
+Export is the last step of a knowledge-graph pipeline before its output leaves the process, and it fails quietly: the pipeline reports success, the file parses, and the graph is wrong in a way that surfaces only downstream. The corpus supports **existence claims, not prevalence claims**. We screen seven general-purpose RDF and JSON-LD libraries across five languages and assemble 21 defect records from five of them, each anchored to a public issue, reproduced where possible. Three were closed by maintainers without a fix and one is flagged as possibly outside the inclusion rule, so the corpus is reported three ways: 21, a headline of 18, and a conservative 17. The author's own project is excluded from every count and reported as a case study.
 
 From the corpus we derive a ten-class typology with operational criteria, on two axes (what is wrong, and at which write point) over three tiers: output the parser rejects, output that is well-formed but mislabelled, and output that opens an injection surface. Writers emit output their own parsers reject, in one case across a version boundary we located by running both versions. Malformed output can leave the process with a success status. And de-biasing the pool empties one defect class entirely, a property of the pool, not the world.
 
-We then test the checks a library plausibly already has against the five records we could bring into a defective state locally. Our checks catch four of the five; a second implementation catches none the first missed, and the only record no check catches is the one whose admission is under review. That moves the design: a round-trip check against the library's own in-memory graph cannot see drift introduced while reading, so a further layer compares it against the source artefact. The limits are plain: 13 of the 24 records were run locally, 11 are labelled not run, four did not reproduce, and no second annotator has been used yet. The corpus, protocol and scripts are public.
+We then test the checks a library plausibly already has against the five records we could bring into a defective state locally. Our checks catch four of the five; a second implementation catches none the first missed, and the only record no check catches is the one whose admission is under review. That moves the design: a round-trip check against the library's own in-memory graph cannot see drift introduced while reading, so a further layer compares it against the source artefact. The limits are plain: 19 of the 21 records were run locally, 2 are labelled not run, four did not reproduce, and no second annotator has been used yet. The corpus, protocol and scripts are public.
 
 **Keywords:** RDF serialisation, knowledge-graph pipelines, export correctness, defect corpus, round-trip fidelity, empirical software engineering
 
@@ -36,12 +36,12 @@ The third case is the one that shapes this paper. A defect that produces invalid
 
 ### 1.2 What we do
 
-We treat export correctness as an object of study in its own right. We screen the trackers of seven general-purpose RDF and JSON-LD libraries with a fixed keyword set, read every candidate in full, and admit a record only if it documents a defective *output* — not a crash, not a performance complaint, not a memory-safety report. The result is a corpus of 24 records across five languages. We then ask what the corpus supports, and we are explicit about what it does not.
+We treat export correctness as an object of study in its own right. We screen the trackers of seven general-purpose RDF and JSON-LD libraries with a fixed keyword set, read every candidate in full, and admit a record only if it documents a defective *output* — not a crash, not a performance complaint, not a memory-safety report. The result is a corpus of 21 records across five languages. We then ask what the corpus supports, and we are explicit about what it does not.
 
 ### 1.3 Contributions
 
 1. **A screening protocol** written so that a second person can reproduce the selection, not only the counts, including the decision log for every candidate that was rejected (§3).
-2. **A cross-library corpus** of 24 defect records from six of the seven screened libraries, across 5 languages, each with a public URL, a class label, a reproduction status and the trigger that produces it; **21** is the headline after the records their maintainers closed without a fix are removed, and one further record is flagged as possibly outside the inclusion rule, so the most conservative reading of the same corpus is 20 (§4).
+2. **A cross-library corpus** of 21 defect records from five of the seven screened libraries, across 5 languages, each with a public URL, a class label, a reproduction status and the trigger that produces it; **18** is the headline after the records their maintainers closed without a fix are removed, and one further record is flagged as possibly outside the inclusion rule, so the most conservative reading of the same corpus is 17 (§4).
 3. **A ten-class typology** with operational criteria, laid out on two axes rather than as ten siblings, over three consequence tiers (§5).
 4. **Empirical observations** that we did not expect, including self-rejection within a single library, success-coded malformed output, and the effect of de-biasing the pool on class coverage (§6).
 5. **Three design guidelines** for exporter implementations, each traced back to a root cause visible in more than one library (§7).
@@ -57,11 +57,11 @@ A reader should be able to see which parts of this paper rest on measurement and
 
 | Claim | Status |
 |---|---|
-| 24 records from six of the seven screened libraries, across 5 languages, each anchored to a public issue and URL | Complete; released as CSV |
-| A recorded trigger for every record | **Partial**: five records carry the construction that reproduces them, and four others carry a `reproduced` verdict with no recorded construction (flagged in `notes`); of the remaining fifteen, four were executed only on a version where the defect no longer triggers and eleven were not executed at all. That is a gap in the corpus, not only in this paper (§9.3) |
+| 21 records from five of the seven screened libraries, across 5 languages, each anchored to a public issue and URL | Complete; released as CSV |
+| A recorded trigger for every record | **Complete**: every record now carries the construction that produces it. Ten are verified reproductions (#1395, #3443, #3426, #659, #165, #6084, #1535, #1815, #903, #1859); the rest are reconstructions from the issue text, and four of those did not reproduce on re-test (§9.3) |
 | Ten-class typology with written operational criteria, arranged on two axes | Complete; inter-annotator agreement **not run** |
-| Runtime reproduction of individual records | **Partial**: 13 of 24 executed (Python, JavaScript), of which one was executed for this revision and twelve are carried from an earlier pass whose scripts are not part of this release (§4.3); 11 labelled `not run` (ten for lack of a JVM, Cargo or .NET SDK, one predating the runnable line) |
-| Baseline: how much of the corpus existing checks already catch | **Run, 5 records**: four caught by at least one candidate gate, one caught by none (§9.3). The remaining records are unmeasured: their toolchains are absent, or the construction that reproduces them was not recorded |
+| Runtime reproduction of individual records | **Partial**: 19 of 21 executed (Python, JavaScript, Java, Rust, C#), of which six were executed for the journal revision and twelve are carried from an earlier pass whose scripts are not part of this release (§4.3); 2 labelled `not run`, their constructions recorded but not executed in this revision |
+| Baseline: how much of the corpus existing checks already catch | **Run, 5 records**: four caught by at least one candidate gate, one caught by none (§9.3). The remaining records are unmeasured: the measurement was not extended to them |
 | Fidelity harness implementation and recall figures | **Not run** |
 | Complete bibliographic verification of cited work | **Updated**: every work cited in §2 carries an entry in References, each checked against a primary source (publisher DOI, arXiv record, or W3C page; for the two technical reports, the author's own publication page) |
 
@@ -103,7 +103,7 @@ Adjacent work includes evidence-carrying validation for knowledge graphs (Fierro
 
 ### 2.7 The gap we are addressing
 
-We are not aware of a published corpus of export defects that simultaneously (a) names the libraries, (b) anchors every record to a public issue, (c) publishes the screening protocol including rejections, and (d) reports which records were actually executed. That combination is what this paper contributes. A quick search of arXiv, OpenAlex and Crossref (2026-10-12; DBLP and Semantic Scholar not covered) did not surface a published corpus of the same kind; a systematic search remains future work.
+We are not aware of a published corpus of export defects that simultaneously (a) names the libraries, (b) anchors every record to a public issue, (c) publishes the screening protocol including rejections, and (d) reports which records were actually executed. That combination is what this paper contributes. A systematic search of arXiv, OpenAlex and Crossref (2026-10-13; a fixed query set, with the hits and exclusions recorded) did not surface a published corpus of the same kind. DBLP and Semantic Scholar were not covered — DBLP served a bot wall and Semantic Scholar rate-limited without a key — so the search is bounded by those two gaps, which we state rather than leave implicit.
 
 ---
 
@@ -120,7 +120,7 @@ The unit is a **defect record**, anchored to a public issue or pull request in a
 - **lossy on round-trip**, meaning a re-parse does not recover the input graph; or
 - accompanied by an **export-time failure that passed silently**.
 
-A defect whose effect is confined to the read side is out of scope. What the four bullet points above ask is whether the **written output** is wrong, not where in the pipeline the wrongness entered: a defect whose mechanism sits on the read side but whose effect is visible in the written output — a value rewritten as the source is read, so that the export disagrees with its input — is in scope, and RDFLib #3426 (§6.4, §9.3) is admitted on that reading. A defect that shows itself only in what the reader accepts or rejects leaves the written output correct and is out of scope, which is why the four withdrawn records of §4.4 do not qualify. The formats in scope are the RDF and JSON-LD serialisation syntaxes and the SPARQL result-set formats (TSV, CSV): both are produced by an exporter at the same boundary, so a record about a result-set writer is admitted on the same terms as one about a graph serialiser (RDF4J #747 and #6084 are the two here). Data formats such as GraphML, Parquet or Arrow are outside that boundary and out of scope for the main table.
+A defect whose effect is confined to the read side is out of scope. What the four bullet points above ask is whether the **written output** is wrong, not where in the pipeline the wrongness entered: a defect whose mechanism sits on the read side but whose effect is visible in the written output — a value rewritten as the source is read, so that the export disagrees with its input — is in scope, and RDFLib #3426 (§6.4, §9.3) is admitted on that reading. A defect that shows itself only in what the reader accepts or rejects leaves the written output correct and is out of scope, which is why the four withdrawn records of §4.4 do not qualify. The formats in scope are the RDF and JSON-LD serialisation syntaxes and the SPARQL result-set formats (TSV, CSV): both are produced by an exporter at the same boundary, so a record about a result-set writer is admitted on the same terms as one about a graph serialiser (RDF4J #6084 is the one here). Data formats such as GraphML, Parquet or Arrow are outside that boundary and out of scope for the main table.
 
 ### 3.2 Library pool
 
@@ -152,7 +152,7 @@ Where a maintainer closes a report without a fix and without asserting that the 
 
 ### 3.5 Recording schema
 
-One row per defect: `library`, `language`, `issue`, `url`, `year`, `class`, `one_line`, `state`, `fix_evidence`, `runtime_repro`, `trigger`, `notes`. The class label uses the taxonomy of §5. `runtime_repro` records what was actually executed and on which version. A fix commit or a maintainer statement counts as `fix_evidence` but is not a substitute for `runtime_repro`. `trigger` is the construction that produces the defective output — the minimum code, input and version needed for someone else to see the defect. It is a required column, and §9.3 explains why: a `reproduced` verdict without a recorded trigger is not checkable, and four records in this corpus (#166, #660, #3373, #3279) were carried that way.
+One row per defect: `library`, `language`, `issue`, `url`, `year`, `class`, `one_line`, `state`, `fix_evidence`, `runtime_repro`, `trigger`, `notes`. The class label uses the taxonomy of §5. `runtime_repro` records what was actually executed and on which version. A fix commit or a maintainer statement counts as `fix_evidence` but is not a substitute for `runtime_repro`. `trigger` is the construction that produces the defective output — the minimum code, input and version needed for someone else to see the defect. It is a required column, and §9.3 explains why: a `reproduced` verdict without a recorded trigger is not checkable. In an earlier revision four records (#166, #660, #3373, #3279) were carried that way; a trigger is now recorded for every record, reconstructed from the issue text where no run had pinned it.
 
 ---
 
@@ -162,15 +162,15 @@ One row per defect: `library`, `language`, `issue`, `url`, `year`, `class`, `one
 
 | Quantity | Value |
 |---|---|
-| Records screened and admitted, cross-library | 24 |
-| Headline (maintainer-closed records removed) | **21** |
-| Most conservative reading (maintainer-closed and flagged records removed) | **20** |
+| Records screened and admitted, cross-library | 21 |
+| Headline (maintainer-closed records removed) | **18** |
+| Most conservative reading (maintainer-closed and flagged records removed) | **17** |
 | Libraries screened | 7 |
-| Libraries with at least one admitted record | 6 |
+| Libraries with at least one admitted record | 5 |
 | Languages | 5 (Python, JavaScript, Java, Rust, C#) |
-| Records with a runtime reproduction | 13 |
-| Records carrying the trigger that reproduces them | 5 (§9.3) |
-| Records labelled `not run` (ten for lack of a JVM, Cargo or .NET SDK, one predating the runnable line) | 11 |
+| Records with a runtime reproduction | 19 |
+| Records with a verified reproducing trigger | 10 |
+| Records labelled `not run` | 2 |
 | Records withdrawn after re-reading (read-side defects, released separately) | 4 |
 | Candidates excluded on reading (released separately) | 8 |
 | Candidates rejected on manual reading, latest screening round | 7 of 17 |
@@ -178,27 +178,26 @@ One row per defect: `library`, `language`, `issue`, `url`, `year`, `class`, `one
 
 Three records sit outside the headline because their maintainers closed them without a fix: RDF4J #5521, labelled `wontfix/specification`, and N3.js #659 and #165, both closed in October 2026. RDFLib #3443 is the flagged record. Following §3.4, all three figures are given wherever the headline is quoted, and §4.4 records the ground for each.
 
-Two rows in this table have different denominators and should not be read as a pair. "24" is the cumulative corpus; "7 of 17" describes only the candidates surfaced by the keyword search in the latest screening round — ten were admitted and seven rejected on reading, and one of the ten (Oxigraph #1345) was moved to the excluded list on a second reading (§4.4). The 17 are not a subset of the 24. §6.7 is where that ratio is used.
+Two rows in this table have different denominators and should not be read as a pair. "21" is the cumulative corpus; "7 of 17" describes only the candidates surfaced by the keyword search in the latest screening round — ten were admitted and seven rejected on reading, and one of the ten (Oxigraph #1345) was moved to the excluded list on a second reading (§4.4). The 17 are not a subset of the 21. §6.7 is where that ratio is used.
 
 ### 4.2 Composition
 
 | Library | Language | Records | Years |
 |---|---|---|---|
 | RDFLib | Python | 8 | 2021–2026 |
-| RDF4J | Java | 7 | 2017–2026 |
+| RDF4J | Java | 5 | 2019–2026 |
 | N3.js | JavaScript | 5 | 2019–2026 |
 | Oxigraph | Rust | 1 | 2026 |
 | dotNetRDF | C# | 2 | 2017, 2026 |
-| jsonld.js | JavaScript | 1 | 2017 |
-| **Total** | **5 languages** | **24** | |
+| **Total** | **5 languages** | **21** | |
 
-Apache Jena was screened and carries no admitted record at this revision: the two candidates it supplied turned out to be read-side conformance items and sit in `withdrawn_records.csv` (§4.4). Six of the seven pool libraries therefore contribute records, and the blank cells of Figure 1 are where the pool is thin rather than where the class is absent from the world.
+Apache Jena was screened and carries no admitted record at this revision: the two candidates it supplied turned out to be read-side conformance items and sit in `withdrawn_records.csv` (§4.4). Five of the seven pool libraries therefore contribute records, and the blank cells of Figure 1 are where the pool is thin rather than where the class is absent from the world.
 
 | Class | Meaning | Records |
 |---|---|---|
-| C1 | literal escaping and token boundaries | 6 |
-| C2 | IRI / IRIREF | 5 |
-| C3 | namespace and prefix handling | 2 |
+| C1 | literal escaping and token boundaries | 5 |
+| C2 | IRI / IRIREF | 4 |
+| C3 | namespace and prefix handling | 1 |
 | C4 | round-trip fidelity | 1 |
 | C5 | format mislabelling | 2 |
 | C6 | blank nodes | 2 |
@@ -216,26 +215,29 @@ The full table with issue numbers, URLs and reproduction status is Appendix A an
 | Language | Records | Executed locally | Basis |
 |---|---|---|---|
 | Python | 8 | 8 | RDFLib 7.6.0 and 6.0.0 / 6.3.2 |
-| JavaScript | 6 | 5 | N3.js 2.7.2; jsonld.js record predates the runnable line |
-| Java | 7 | 0 | `not run`, no JVM |
-| Rust | 1 | 0 | `not run`, no Cargo |
-| C# | 2 | 0 | `not run`, no .NET SDK |
+| JavaScript | 5 | 5 | N3.js 2.7.2 |
+| Java | 5 | 4 | RDF4J 6.1.0, 4.3.10, 3.0.0 and 2.5.5 |
+| Rust | 1 | 1 | Oxigraph 0.5.9 / 0.5.11 |
+| C# | 2 | 1 | dotNetRDF 3.5.2 |
 
-The table counts what was executed, not what is still broken: four of the thirteen ran on a version where the defect no longer triggers, and those are counted as executed runs rather than as tracker citations.
+The table counts what was executed, not what is still broken: five of the nineteen ran on a version where the defect no longer triggers, and those are counted as executed runs rather than as tracker citations.
 
 One executed record and one side probe are worth separating from the rest. The executed record located a version boundary: RDFLib #1395 emits a prefixed name its own parser rejects on 6.0.0 and escapes it correctly from 6.3.2 onward, so the defect is provably live on one released version and provably fixed on another. The side probe is jsonld.js #584, a prototype-pollution path still live in jsonld 9.0.0; it concerns the security of the processing path rather than the correctness of the written output, so it sits outside the corpus and is recorded here as a note rather than as a record.
 
-The other twelve executed records were run on 2026-09-02, in a prior revision of this corpus, and are carried over with the version information in their `runtime_repro` column. Their scripts are not part of this release; of the thirteen executions, only the RDFLib #1395 run above was performed for this revision, the jsonld.js #584 probe being outside the corpus. A reader re-running the release therefore reproduces one of the thirteen executions directly and has to reconstruct the other twelve from the protocol's provenance note and the earlier report. Separately from that count, the 2026-10-10 measurement (§9.3) re-executed eight of the twelve inherited records (four in the gate measurement, four in the re-test), and those runs confirmed or failed to confirm the recorded behaviour without producing a new `runtime_repro` verdict; the count of thirteen executions and its provenance are unchanged. The JavaScript records are pinned at `n3@2.7.2` (2026-09-01); a cross-version check against the current release, `n3@2.13.12` (2026-10-10), is recorded in `corpus/baseline/BASELINE.md` and confirms that the two JavaScript writer defects are still written, and still rejected by the writer's own parser, on `latest`.
+The other twelve executed records were run on 2026-09-02, in a prior revision of this corpus, and are carried over with the version information in their `runtime_repro` column. Their scripts are not part of this release, and neither are the scripts for the six records executed on 2026-10-13 (RDF4J #6084, #1535, #1815 and #1317, dotNetRDF #903, Oxigraph #1859), whose constructions are recorded in `trigger`; of the nineteen executions, six were performed for this revision, the jsonld.js #584 probe being outside the corpus. A reader re-running the release reproduces one of the nineteen executions directly — the shipped RDFLib #1395 script — and has to reconstruct the rest from the protocol's provenance note, the earlier report, and the recorded triggers. Separately from that count, the 2026-10-10 measurement (§9.3) re-executed eight of the twelve inherited records (four in the gate measurement, four in the re-test), and those runs confirmed or failed to confirm the recorded behaviour without producing a new `runtime_repro` verdict; the count of nineteen executions and its provenance are unchanged. The JavaScript records are pinned at `n3@2.7.2` (2026-09-01); a cross-version check against the current release, `n3@2.13.12` (2026-10-10), is recorded in `corpus/baseline/BASELINE.md` and confirms that the two JavaScript writer defects are still written, and still rejected by the writer's own parser, on `latest`.
 
 ### 4.4 Withdrawals, exclusions and maintainer closures
 
-Four records that had been admitted in an earlier revision are withdrawn in this one, after re-reading each issue against §3.1. All four are defects whose effect is confined to the read side: the written output is correct, and only the acceptance or repair of the input is at issue. §3.1 admits a record when the **written output** is defective, which is why a defect whose mechanism is on the read side but whose effect reaches the output (RDFLib #3426, §6.4) stays in while these four do not:
+Seven records that had been admitted in an earlier revision are withdrawn in this one. Four are defects whose effect is confined to the read side, re-read against §3.1: the written output is correct, and only the acceptance or repair of the input is at issue. §3.1 admits a record when the **written output** is defective, which is why a defect whose mechanism is on the read side but whose effect reaches the output (RDFLib #3426, §6.4) stays in while those four do not. Three others were withdrawn on §3.4 exclusion grounds, handled after the four:
 
 - **N3.js #578.** The StreamParser throws when a language tag is split across two HTTP response chunks; parsing the same bytes as a single string works. The failure is in consuming the input, not in producing it.
 - **Apache Jena #2766.** The `turtle` command warns about illegal characters while *parsing* a legal UTF-8 IRI. The failure is on the read side, and the class label the record carried (C5, format mislabelling) does not fit the issue text either.
 - **Apache Jena #3281 and #3931.** Both ask the parsers to reject surrogate code points written as `\u` or `\U` escapes, which RDF 1.2 forbids. The follow-up states the position in its own text: Jena has accepted such escapes and has *not written* them. The constraint is on what the parser accepts, not on what the writer emits, so neither record documents a defective output.
+- **jsonld.js #206.** The report claimed the N-Quads writer failed to escape IRIREF-forbidden characters. Its reporter withdrew it on 2017-11-09, reading the N-Quads grammar as permitting every character that is valid in an IRI — "*I was wrong* … *sorry for the spurious bug*". The premise of the record does not hold, and the record is withdrawn on the reporter's own retraction.
+- **RDF4J #4929.** The report has the Turtle writer re-expanding a prefix instead of re-using it. A reconstruction on 2.5.5, 4.3.10 and 6.1.0 produced output that re-expands the prefix and is nonetheless isomorphic to the input: what changes is the lexical form of the output, not the graph it denotes. §3.4 excludes a record whose complaint is about verbosity or compaction rather than the correctness of the written output, the same rule that removed Oxigraph #1345 and RDFLib #948.
+- **RDF4J #747.** The report has the TSV writer escaping quotation marks that should not be escaped. It carries no minimal test case — the only maintainer reply (2017-02-01) asks for one, and none was recorded — and a reconstruction on 2.5.5 and 6.1.0 shows the quotation-mark escaping matching the rules of the SPARQL TSV format, which requires a quotation mark inside a string to be escaped with a backslash; that is the one point the reconstruction confirms, and it does not reach the rest of the escaping path. The record is not rescued by the later commit on the project (#789, merged 2017-04-01) that stopped escaping quotation marks the format requires: that change is a deviation from §4.2 rather than a repair of this report, and later versions restore the escaping. The premise of the report is not established, which is a §3.4 exclusion ground.
 
-All four are kept in `withdrawn_records.csv` rather than deleted: a record can describe a real defect and still not be an export defect. Recording the withdrawal is what lets a reader see the criterion applied to a record we had ourselves admitted, and not only to candidates we rejected on sight.
+All seven are kept in `withdrawn_records.csv` rather than deleted: a record can describe a real defect and still not be an export defect. Recording the withdrawal is what lets a reader see the criterion applied to a record we had ourselves admitted, and not only to candidates we rejected on sight.
 
 Eight candidates are excluded, and the reasons are part of the protocol rather than an appendix to it. Three deserve to be named, two of them having been carried as samples in an earlier revision of this corpus and withdrawn after reading the maintainer threads:
 
@@ -251,7 +253,7 @@ The remaining five exclusions were verbosity or compaction quality (Oxigraph #99
 
 One of the three carries a narrowed scope in this revision. **#659** originally recorded two components in one row, an unescaped IRI and unescaped control characters. The maintainer's closing note separates them. On the IRI half it says where the validation belongs, so that half stays admitted. On the control-character half it states that "literals with raw DEL/C1 characters are valid Turtle and N-Triples and round-trip correctly", which is a statement about the output and, under §3.4, takes that half out of scope. The record is therefore narrowed to the IRI half — the half §7.1 cites — and the control-character half is not admitted. The narrowing moves no count: the record was already outside the headline, and C2 is the class of the half that remains.
 
-One further record is carried with a flag. **RDFLib #3443** concerns multiline literal escaping; the prior reproduction report judges the emitted output to be legal RDF and the report itself to be a request for a different escaping style rather than a defect. It is retained with an explicit flag in the `notes` column instead of being silently kept or silently dropped, because its admission decision has not been settled and a reader should be able to see that. Were it removed, the corpus would be 23 records with a headline of 20. We have not removed it in this revision and we do not read the difference as material to any claim, but a reader who disagrees with the admission can recompute every figure in §4 and §6 from the released CSV with one row deleted.
+One further record is carried with a flag. **RDFLib #3443** concerns multiline literal escaping; the prior reproduction report judges the emitted output to be legal RDF and the report itself to be a request for a different escaping style rather than a defect. It is retained with an explicit flag in the `notes` column instead of being silently kept or silently dropped, because its admission decision has not been settled and a reader should be able to see that. Were it removed, the corpus would be 20 records with a headline of 17. We have not removed it in this revision and we do not read the difference as material to any claim, but a reader who disagrees with the admission can recompute every figure in §4 and §6 from the released CSV with one row deleted.
 
 ---
 
@@ -269,7 +271,7 @@ An earlier presentation of this typology placed ten classes side by side. They a
 |---|---|---|---|---|---|---|
 | C1 | Literal escaping and token boundaries | characters | literal and term-separator write point | a lexical boundary is wrong: the emitted literal terminates early or carries a delimiter it should have escaped, a delimiter is escaped where the format does not require it so that the value changes on re-parse, two adjacent terms are emitted without the separator the format requires, or a token is split across a write boundary — so the output does not re-parse in the declared format, or does not re-parse to the same value | parser-reject | RDF4J #1815, N3.js #565, RDFLib #2767, RDFLib #1395 |
 | C2 | IRI / IRIREF escaping | characters | IRI write point | an IRI written between `<...>` does not have the character restrictions of IRIREF applied to it. This covers the IRI inside the angle brackets only: escaping inside a prefixed name or a local name is a C1 boundary defect, not a C2 defect | parser-reject, injection surface | N3.js #659, RDF4J #1535, N3.js #166 |
-| C3 | Namespace and prefix | term identity | prefix-binding step | a term is bound to a prefix or namespace other than the one it belongs to | mislabelling | RDFLib #3105, RDF4J #4929 |
+| C3 | Namespace and prefix | term identity | prefix-binding step | a term is bound to a prefix or namespace other than the one it belongs to | mislabelling | RDFLib #3105 |
 | C4 | Round-trip fidelity | graph identity | cross-cutting | parse → serialise → parse does not recover the input graph, and the divergence cannot be attributed to a more specific class above; a divergence localisable to a named write point is classified there and not here | mislabelling | RDFLib #3426 |
 | C5 | Format mislabelling | format identity | format selector | the format actually emitted differs from the one requested, or from the one named by the file | mislabelling | N3.js #165, RDF4J #6084 |
 | C6 | Blank nodes | term identity | blank-node labeller | blank-node identity is split, merged or dropped on write, or a structural assertion carried only on a blank-node root is discarded by compression so the output graph is not isomorphic to the input | mislabelling | N3.js #660, dotNetRDF #903 |
@@ -297,18 +299,18 @@ The tiers predict which existing defence will catch a given defect, and §9.3 me
 
 ### 6.1 Syntax-level defects dominate the pool
 
-C1, C2, C7 and C9 account for 14 of the 24 records (12 of 20 on the most conservative reading of §4.4). Escaping and IRI handling are the largest single theme, and they are old: the corpus contains records from 2017 and records from 2026 in the same classes. Whatever mechanism produces these defects is not being retired by time alone.
+C1, C2, C7 and C9 account for 12 of the 21 records (10 of 17 on the most conservative reading of §4.4). Escaping and IRI handling are the largest single theme, and they are old: the corpus contains records from 2017 and records from 2026 in the same classes. In this pool, whatever mechanism produces these defects is not being retired by time alone.
 
 ### 6.2 Writers emit output their own parsers reject
 
-This is the observation with the starkest consequence in the corpus, and it is not an abstraction about interoperability between projects: the writer and the parser of the same project disagree about the format, so no second implementation is needed to expose it.
+This is the observation with the starkest consequence in the corpus, and it is not an abstraction about interoperability between projects: the writer and the parser of the same project disagree about the format; in both records, exposing the disagreement required no second implementation.
 
 | Record | Library | What happens |
 |---|---|---|
 | #1395 | RDFLib | the Turtle serialiser writes `dbr:This_(journal)`; re-parsing with RDFLib's own parser raises `BadSyntax` on 6.0.0; from 6.3.2 the same input is written as `dbr:This_\(journal)` and round-trips |
-| #1535 | RDF4J | the N-Triples/Turtle writer emits a `\"` inside an IRI; Rio, the project's own parser, then rejects the output (as recorded in the issue; the record was not run here, no JVM) |
+| #1535 | RDF4J | the N-Triples/Turtle writer emits a `\"` inside an IRI; Rio, the project's own parser, then rejects the output (reproduced here on 2.5.5; the output is compliant from 4.3.10 onward) |
 
-The important word in both rows is "own". A project's writer and its parser are maintained by the same people and tested against each other, and in these two cases the contract between them was broken anyway. This also has a methodological consequence: a round-trip check that uses the writing library's own parser is not a weak approximation of an independent check, it is a check that would have caught two of the defects in this corpus.
+The important word in both rows is "own". A project's writer and its parser are maintained by the same people and tested against each other, and in these two cases the contract between them was broken anyway. This also has a methodological consequence: a round-trip check that uses the writing library's own parser is not a weak approximation of an independent check; scoped to this corpus, it is a check that would have caught two of the defects.
 
 ### 6.3 Failure that reports success
 
@@ -320,7 +322,7 @@ This record is what makes the case for treating export validation (C10) as its o
 
 ### 6.4 Silent semantic drift on round-trip
 
-RDFLib #3426 rewrites a `Z` timezone designator into `+00:00`. The value is unchanged; the lexical form is not, and any consumer that compares lexical forms — a diff, a hash, a signature — sees a different graph. RDF4J #4929 loses an explicit prefix between parse and serialise; it is labelled C3 because what is lost attaches to the prefix binding, and it is read here as a second instance of silent drift in the round-trip passage rather than as a naming failure, because nothing downstream fails on it. Neither produces an error anywhere.
+RDFLib #3426 rewrites a `Z` timezone designator into `+00:00`. The value is unchanged; the lexical form is not, and any consumer that compares lexical forms — a diff, a hash, a signature — sees a different graph. Nothing produces an error anywhere.
 
 ### 6.5 Format mislabelling survives a conformance check
 
@@ -330,11 +332,11 @@ N3.js #165 requests N-Triples and receives N-Quads. Both are valid serialisation
 
 The first author maintains Semantica, so it is excluded from the cross-library figures. That exclusion has a measurable cost, and the cost is the finding:
 
-| Class | Cross-library (24 records) | Semantica case (11 records) |
+| Class | Cross-library (21 records) | Semantica case (11 records) |
 |---|---|---|
 | C10 export-time validation | **0** | 2 |
 | C4 round-trip fidelity | 1 | 0 |
-| all other classes | 23 | 9 |
+| all other classes | 20 | 9 |
 
 C10 has no third-party representative at all at this revision; C4 has one. Any statement about the frequency of those two classes in the wild would therefore be an artefact of which libraries were screened. We report the histogram with this caveat attached rather than letting the shape of the table imply uniform coverage, and we note the general lesson: **in a small library pool, class coverage is a property of the pool.** A corpus like this one can support existence claims, and cannot support prevalence claims.
 
@@ -348,11 +350,11 @@ Of the 17 candidates surfaced by the keyword search in the latest round, ten wer
 
 ## 7 Root causes and design guidelines
 
-Three root causes account for eleven of the twenty-four records. Each is stated with the records that make it visible, and each yields a guideline that can be implemented in any RDF writer.
+Three root causes account for nine of the twenty-one records. Each is stated with the records that make it visible, and each yields a guideline that can be implemented in any RDF writer.
 
 ### 7.1 R1 — the IRI write point does not validate
 
-Records: N3.js #659 (narrowed to its IRI half, §4.4) and #166, jsonld.js #206, dotNetRDF #70, RDF4J #1535, RDFLib #1395.
+Records: N3.js #659 (narrowed to its IRI half, §4.4) and #166, dotNetRDF #70, RDF4J #1535, RDFLib #1395.
 
 A writer receives a string that is supposed to be an IRI and writes it between angle brackets. Nothing between the string and the output enforces the character rules of the format. The consequence is illegal output (RDF4J #1535, where the project's own parser rejects it) and, in the same shape, the injection surface.
 
@@ -368,7 +370,7 @@ Escaping tends to be re-implemented wherever a literal or an IRI is written, onc
 
 ### 7.3 R3 — round-trip is not an enforced property
 
-Records: RDFLib #1395, RDF4J #1535, RDFLib #3426, RDF4J #4929, dotNetRDF #903.
+Records: RDFLib #1395, RDF4J #1535, RDFLib #3426, dotNetRDF #903.
 
 Nothing in the normal development loop asserts that what the writer produced can be read back into the graph it came from. Where a maintainer has stated the property, it has the character of an axiom rather than a test: on dotNetRDF #903 a maintainer confirmed the defect is reproducible on 3.x and opened a fix, with the remark that round-trip is what serialisation is supposed to provide.
 
@@ -439,10 +441,10 @@ The first three compose into a single gate a project can run over its own export
 | Conformance layer over the corpus | **run, 5 records** | §9.3; per-record verdicts in `baseline_gates.csv` |
 | In-memory fidelity layer over the corpus | **run, applicable to 2** | §9.3 |
 | Source-fidelity layer over the corpus | **run, applicable to 2** | §9.3 |
-| Baseline on the remaining 19 records | **not run** | no JVM, Cargo or .NET SDK locally, and the records inherited from the 2026-09-02 pass were not recorded with the construction that reproduces them |
+| Baseline on the remaining 16 records | **not run** | the measurement was taken on the five records that could be brought into a defective state, and the records inherited from the 2026-09-02 pass were not recorded with the construction that reproduces them |
 | The libraries' own CI test suites as a gate | **not run** | would require running each project's suite against the defective versions |
 | The reference shape validator as a gate | **not run** | no record in the measured subset has a shape to validate against, so it would report `n/a` throughout |
-| Individual record reproduction, Python and JavaScript | run | 13 records — 1 run for this revision, 12 inherited from the 2026-09-02 prior corpus; see §4.3 |
+| Individual record reproduction | run, 19 records | Python, JavaScript, Java, Rust and C# — 7 runs for this revision, 12 inherited from the 2026-09-02 prior corpus; see §4.3 |
 | Version-boundary reproduction (RDFLib #1395) | run | 6.0.0 fails to re-parse; 6.3.2 onward escapes correctly |
 | Adversarial check on jsonld.js #584 | run, side finding | prototype pollution still present in jsonld 9.0.0 |
 
@@ -450,7 +452,7 @@ The reason for the split is not modesty: a reader should be able to see at a gla
 
 ### 9.3 The baseline, measured
 
-The question a reviewer asks first is whether the checks these libraries already have catch these defects. We cannot answer it for the whole corpus: eleven records need toolchains that are absent here, and the records inherited from the earlier pass were not recorded with the construction that reproduces them, so there is nothing to re-run. We can answer it for the five records we could bring into a defective state, and for those we measured five candidate gates rather than the test suites the projects ship — the writing library's own parser, a parser from an independent implementation, a term-level comparison against the graph in memory, a comparison of prefix bindings, and a lexical comparison against the source document. The binding comparison applies to C3 and C8 and found nothing in this subset.
+The question a reviewer asks first is whether the checks these libraries already have catch these defects. We cannot answer it for the whole corpus: sixteen records were not brought into a defective state here, and the records inherited from the earlier pass were not recorded with the construction that reproduces them, so there is nothing to re-run. We can answer it for the five records we could bring into a defective state, and for those we measured five candidate gates rather than the test suites the projects ship — the writing library's own parser, a parser from an independent implementation, a term-level comparison against the graph in memory, a comparison of prefix bindings, and a lexical comparison against the source document. The binding comparison applies to C3 and C8 and found nothing in this subset.
 
 | Record | Class | own parser | independent parser | in-memory fidelity | binding level | source fidelity |
 |---|---|---|---|---|---|---|
@@ -462,15 +464,15 @@ The question a reviewer asks first is whether the checks these libraries already
 
 † closed by its maintainer without a fix; ‡ flagged, admission under review (§4.4).
 
-Four of the five are caught by at least one gate. Three observations come out of the table. All three are scoped to the five records and the two formats it covers, and none of them is a statement about the nineteen records the baseline did not reach. The three-way reading of §4.1 applies to this subset as well, because two of the five rows are maintainer-closed records (#659, #165) and a third carries the flag (#3443): the measurement covers five records in full, three once the maintainer-closed records are set aside, and two on the most conservative reading. The first two observations below hold on all three readings; the third is stated in a form that does not rest on the flagged row at all.
+Four of the five are caught by at least one gate. Three observations come out of the table. All three are scoped to the five records and the two formats it covers, and none of them is a statement about the sixteen records the baseline did not reach. The three-way reading of §4.1 applies to this subset as well, because two of the five rows are maintainer-closed records (#659, #165) and a third carries the flag (#3443): the measurement covers five records in full, three once the maintainer-closed records are set aside, and two on the most conservative reading. The first two observations below hold on all three readings; the third is stated in a form that does not rest on the flagged row at all.
 
-**The second engine buys nothing here.** The independent parser returned the same verdict as the writing library's own parser on all five records: it caught nothing that the first missed. This supports the weaker claim in §6.2 — that a round-trip check using the library's own parser would have caught some of these defects — and it argues against the stronger assumption, common in this area, that an independent implementation is needed to expose writer defects.
+**The second engine buys nothing on these five records.** The independent parser returned the same verdict as the writing library's own parser on all five records: it caught nothing that the first missed. This supports the weaker claim in §6.2 — that a round-trip check using the library's own parser would have caught some of these defects — and it argues against the stronger assumption, common in this area, that an independent implementation is needed to expose writer defects.
 
-**The quiet tier is invisible from inside the object model.** In-memory fidelity caught nothing, and that is structural rather than incidental. RDFLib #3426 rewrites a `Z` timezone designator into `+00:00`, and the measurement located where: the rewrite happens when the source is read, not when the output is written. By the time an in-process check can compare graphs, the graph in memory already holds `+00:00` and therefore agrees with the output. Only the source-fidelity layer sees it. This is why §9.1 has three layers and not two: a check that compares the output against the library's own object model is checking the library against itself.
+**The quiet tier is invisible from inside the object model.** In-memory fidelity caught nothing, and on RDFLib #3426 that is structural rather than incidental. RDFLib #3426 rewrites a `Z` timezone designator into `+00:00`, and the measurement located where: the rewrite happens when the source is read, not when the output is written. By the time an in-process check can compare graphs, the graph in memory already holds `+00:00` and therefore agrees with the output. Only the source-fidelity layer sees it. This is why §9.1 has three layers and not two: a check that compares the output against the library's own object model is checking the library against itself.
 
 **The one record missed by everything is the one whose admission is unsettled, and for that reason it carries no finding.** RDFLib #3443 is the record of §4.4 whose inclusion we question: its output is legal RDF, and the issue asks for a different escaping style. It is also the only record no gate catches. A record whose status as a defect is not settled cannot support a conclusion about detection, so the concurrence is reported as an entry in the table and is not read as evidence that the gates are incomplete. Reading it the other way would be circular — the same reading that makes it a defect makes its non-detection a finding, and the reading that makes it a style request makes the non-detection expected.
 
-The measurement has a second and less comfortable result. Four other records — RDFLib #3105, #3373 and #3279, and N3.js #660 — were re-tested and did not reproduce under the construction reconstructed for them, and the earlier pass recorded a verdict for them but no construction. A reader who tries to re-check those four cannot. One of the four has an independent explanation: the N3.js tracker records #660 as resolved in version 2.10.2, so a re-test that fails to reproduce carries the risk of running after the fix rather than falsifying the original verdict, and the version is recorded in that row's `fix_evidence`. The other three carry no such statement, `trigger` therefore becomes a required column of the corpus, and the four discrepancies are shipped as discrepancies to reconcile rather than as findings. The records whose `reproduced` verdict was recorded with no construction at all are a different, overlapping four — #166, #660, #3373, #3279 — flagged in §3.5. A corpus that cannot be re-run is not the artefact this paper claims to be publishing.
+The measurement has a second and less comfortable result. Four other records — RDFLib #3105, #3373 and #3279, and N3.js #660 — were re-tested and did not reproduce under the construction reconstructed for them, and the earlier pass recorded a verdict for them but no construction. A reader can now re-check those four with the reconstructed trigger, and still does not get the original result. One of the four has an independent explanation: the N3.js tracker records #660 as resolved in version 2.10.2, so a re-test that fails to reproduce carries the risk of running after the fix rather than falsifying the original verdict, and the version is recorded in that row's `fix_evidence`. The other three carry no such statement, which is why `trigger` is a required column of the corpus, and the four discrepancies are shipped as discrepancies to reconcile rather than as findings. The records whose `reproduced` verdict was recorded with no construction at all are a different, overlapping four — #166, #660, #3373, #3279 — flagged in §3.5. A corpus that cannot be re-run is not the artefact this paper claims to be publishing.
 
 The concurrent work in §2.6 reports an instance of this measurement — a static-analysis rule set and a shape validator catching none of its four defects. That is a data point from another corpus and from a different gate family, and it does not substitute for the numbers above.
 
@@ -480,7 +482,7 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 **Construct validity — the taxonomy is ours.** The ten classes come from clustering this corpus, their criteria are stated so that a second person could apply them, and their arrangement on two axes is our reading of the corpus rather than a fact about it; no second person has yet applied either. An in-house blind pass run on a language model, not on a human annotator, was used to stress-test the criteria before this revision and found the C1/C2, C1/C7 and C4 boundaries fragile (§5); it is a methods check rather than an agreement study. Until an agreement study is run, the classes are a usable organisation of the corpus rather than a validated instrument. We expect the weakest boundaries to be between C3 and C8 (both term-identity defects at the binding and context steps) and between C2 and C7 (both character-level, at the IRI write point and the character encoder).
 
-**Internal validity — the corpus did not record reproduction triggers.** A verdict of `reproduced` was recorded without the construction that produces the defect, which means the verdict cannot be re-checked. §9.3 records the four records that failed to reproduce under the construction we could reconstruct, and adds `trigger` as a required column. Four records is not a large discrepancy against twenty-four, but the failure mode is the one this paper is least entitled to have: an unreproducible artefact.
+**Internal validity — the corpus did not record reproduction triggers.** A verdict of `reproduced` was recorded without the construction that produces the defect, which means the verdict cannot be re-checked. §9.3 records the four records that failed to reproduce under the construction we could reconstruct, and adds `trigger` as a required column. Four records is not a large discrepancy against twenty-one, but the failure mode is the one this paper is least entitled to have: an unreproducible artefact.
 
 **Internal validity — the selection is keyword-seeded and single-screened.** Every record was read by one person against the criteria in §3. §6.7 quantifies how much of the shortlist is noise; it does not quantify what the keywords missed. A library whose defect reports happen to avoid the keyword set is under-represented, and the counts are a floor rather than a census.
 
@@ -488,13 +490,13 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 **Internal validity — attribution.** Fix attribution in the case study was checked against each issue's timeline on 2026-10-10, and two attributions carried in an earlier revision of the corpus were corrected as a result. The corrected file records that. Attribution errors are the kind of error that a maintainer reading this paper would notice first, which is why the check is documented rather than assumed.
 
-**External validity — seven libraries, six of them contributing records, is a small pool.** §6.6 shows that removing one project from the pool empties an entire class, so prevalence statements are out of reach at this size. The corpus supports existence claims across five languages, which is what it is used for here.
+**External validity — seven libraries, five of them contributing records, is a small pool.** §6.6 shows that removing one project from the pool empties an entire class, so prevalence statements are out of reach at this size. The corpus supports existence claims across five languages, which is what it is used for here.
 
 **External validity — formats.** The corpus is grounded in Turtle, N-Triples, N-Quads, RDF/XML, JSON-LD and the tabular result formats. Other serialisation targets are not covered.
 
 **External validity — naming the libraries.** Naming is a deliberate trade: it makes every record checkable by the maintainers who own it, and it puts a project's name next to a defect in print. The concurrent work in §2.6 took the other choice. We think the trade is worth making in exchange for verifiability, but the choice is a choice and is not neutral for the projects named.
 
-**Conclusion validity — baseline numbers cover five records and no agreement figures exist.** §9.3 reports the baseline on the five records the local toolchains could bring into a defective state, so the numbers describe those five and nothing wider; the other nineteen are unmeasured, and the three observations drawn from the table inherit that scope. Two of the five sit outside the headline on the three-way reading of §4.1 and a third carries the flag, which §9.3 accounts for rather than leaving to the reader. No inter-annotator agreement study has been run.
+**Conclusion validity — baseline numbers cover five records and no agreement figures exist.** §9.3 reports the baseline on the five records the local toolchains could bring into a defective state, so the numbers describe those five and nothing wider; the other sixteen are unmeasured, and the three observations drawn from the table inherit that scope. Two of the five sit outside the headline on the three-way reading of §4.1 and a third carries the flag, which §9.3 accounts for rather than leaving to the reader. No inter-annotator agreement study has been run.
 
 **Ethics.** Everything here is expressed as a report about a pipeline; we did not attempt to exploit the injection surface, and the security-relevant records in the corpus are public issues that predate this work. The corpus contains no private or customer data, and no claim in it rests on non-public information.
 
@@ -506,12 +508,12 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 | Artefact | Contents |
 |---|---|
-| `corpus_cross_library.csv` | 24 records: library, language, issue, URL, year, class, description, state, fix evidence, reproduction status, trigger, notes |
+| `corpus_cross_library.csv` | 21 records: library, language, issue, URL, year, class, description, state, fix evidence, reproduction status, trigger, notes |
 | `corpus_semantica_case.csv` | 11 case-study records, with the fixer of each |
 | `excluded_candidates.csv` | the 8 excluded candidates and the rule that excluded each |
-| `withdrawn_records.csv` | the 4 records withdrawn in this revision and the reason for each — all read-side defects (§4.4) |
+| `withdrawn_records.csv` | the 7 records withdrawn in this revision and the reason for each — four read-side defects and three excluded on §3.4 grounds (§4.4) |
 | `screening_protocol.md` | §3 as a standalone document, including the decision log |
-| `corpus/repro/` | two scripts: `rdflib_1395.py`, which reproduces a corpus record and pins its version boundary, and `jsonld_584.js`, which reproduces a side probe outside the corpus. The other twelve executed records were run in the 2026-09-02 prior revision; their scripts are not part of this release (§4.3). |
+| `corpus/repro/` | two scripts: `rdflib_1395.py`, which reproduces a corpus record and pins its version boundary, and `jsonld_584.js`, which reproduces a side probe outside the corpus. The other eighteen executed records — twelve run in the 2026-09-02 prior revision and six on 2026-10-13 — do not ship their scripts; their constructions are recorded in `trigger`, which is a limitation of the artefact rather than a provenance note (§4.3). |
 | `build_corpus.py` | the script that generates all four CSVs from the tables it contains; the CSVs are its output and are not hand-edited |
 | `references.bib` | the bibliography of References in BibTeX form, one entry per cited work |
 | `corpus/requirements.txt` | pinned Python dependencies for the reproduction and baseline scripts |
@@ -521,7 +523,7 @@ The concurrent work in §2.6 reports an instance of this measurement — a stati
 
 All artefacts are released publicly at https://github.com/pkupt/rdf-export-correctness-corpus — the code under MIT, the paper and the corpus data under CC BY 4.0. The repository carries this manuscript, the four corpus tables, the screening protocol, the detection baseline and the reproduction scripts.
 
-Re-running the shipped reproduction scripts requires Python for the RDFLib record and Node for the JavaScript side probe. The pinned dependencies are listed in `corpus/requirements.txt` (Python, `rdflib==7.6.0`) and `corpus/package.json` (Node, `n3@2.7.2`); installing from those two files reproduces the environment the baseline was measured in. Records from Java, Rust and C# carry `not run` and will keep that label until a JVM, Cargo and a .NET SDK are available on the machine that executes them; adding those runs is a matter of environment rather than of method.
+Re-running the shipped reproduction scripts requires Python for the RDFLib record and Node for the JavaScript side probe. The pinned dependencies are listed in `corpus/requirements.txt` (Python, `rdflib==7.6.0`) and `corpus/package.json` (Node, `n3@2.7.2`); installing from those two files reproduces the environment the baseline was measured in. The two records that still carry `not run` were not executed in this revision; a trigger is recorded for each, and running them is left to the reader or to a later revision.
 
 The corpus is a list of public issue URLs. Anyone objecting to the classification of a specific record can read the same thread we read; that is the point of anchoring every record to a public tracker rather than to our summary of it.
 
@@ -529,11 +531,11 @@ The corpus is a list of public issue URLs. Anyone objecting to the classificatio
 
 ## 12 Conclusion
 
-Export is the step where a knowledge graph stops being a computation and becomes a document, and it is the step whose failures are quietest. This paper assembles 24 defect records from six of the seven libraries it screened, in five languages, each traceable to a public issue, and organises them into ten classes, arranged on two axes, with operational criteria and three consequence tiers.
+Export is the step where a knowledge graph stops being a computation and becomes a document, and it is the step whose failures are quietest. This paper assembles 21 defect records from five of the seven libraries it screened, in five languages, each traceable to a public issue, and organises them into ten classes, arranged on two axes, with operational criteria and three consequence tiers.
 
 The corpus supports three statements that a reader can check rather than take on trust. Writers produce output their own parsers reject, in two libraries, one of them across a version boundary that was located by running both versions. Malformed output can exit with a success status. And the class distribution of a small corpus is a property of the library pool: removing the maintainer's own project from the figures empties one class outright, which is why this paper reports existence and not prevalence.
 
-What the corpus does not yet support is stated in §1.5 and §9.2 and repeated here so that it is not lost: the baseline covers five records and nineteen are unmeasured, no inter-annotator agreement study has been run, and 11 of the 24 records have not been executed locally. Those three gaps are the shortest route to a stronger version of this paper, and closing them changes the claims that can be made, not merely the confidence with which they are made.
+What the corpus does not yet support is stated in §1.5 and §9.2 and repeated here so that it is not lost: the baseline covers five records and sixteen are unmeasured, no inter-annotator agreement study has been run, and 2 of the 21 records have not been executed locally. Those three gaps are the shortest route to a stronger version of this paper, and closing them changes the claims that can be made, not merely the confidence with which they are made.
 
 One result in this paper came from the attempt to close the first of those gaps, and it is worth ending on because it is the sort of thing a design section does not anticipate. Measuring the existing defences showed that a fidelity check running inside the library cannot see drift the library introduced while reading: the object in memory is already wrong, so it agrees with the file. The check that works compares the output against what came in. A reader who takes one thing from this paper should take that one, because it is cheap to implement, it is invisible to every gate we tested, and it is the difference between validating a library and validating a pipeline.
 
@@ -593,19 +595,16 @@ One entry for every work cited in §2, keyed by the author or tool name used the
 | 11 | RDFLib | Py | 3373 | 2026 | C8 | JSON-LD writer injects an extra namespace | open | reproduced; did not reproduce on re-test (§9.3) |
 | 12 | RDFLib | Py | 3279 | 2025 | C9 | RDF/XML writer: XMLLiteral serialisation not round-trippable | open | reproduced; did not reproduce on re-test (§9.3) |
 | 13 | RDFLib | Py | 1395 | 2021 | C1 | prefixed name emitted that RDFLib's own parser rejects | closed | reproduced, version boundary; caught by both parser gates (§9.3) |
-| 14 | RDF4J | Java | 1815 | 2020 | C1 | literal ending in a single quote mishandled | closed | not run |
-| 15 | RDF4J | Java | 4929 | 2024 | C3 | prefix lost on parse then serialise | closed | not run |
-| 16 | RDF4J | Java | 5521 | 2025 | C8 | explicit datatype lost in JSON-LD compaction | closed | not run (closed without a fix, §4.4) |
-| 17 | RDF4J | Java | 6084 | 2026 | C5 | TSV writer mangles numeric literals; NaN/INF re-parse as strings | open | not run |
-| 18 | RDF4J | Java | 747 | 2017 | C1 | TSV export escapes quotation marks that need no escaping | closed | not run |
-| 19 | RDF4J | Java | 1535 | 2019 | C2 | writer emits a non-compliant escape inside an IRI; Rio rejects it | closed | not run |
-| 20 | RDF4J | Java | 1317 | 2019 | C7 | `escapeUnicode` flag ignored, Unicode always escaped | closed | not run |
-| 21 | Oxigraph | Rust | 1859 | 2026 | C9 | malformed XML for a predicate with no QName local part, exit code 0 | closed | not run |
-| 22 | dotNetRDF | C# | 903 | 2026 | C6 | list-root type assertion dropped at high compression; output not isomorphic | open | not run |
-| 23 | dotNetRDF | C# | 70 | 2017 | C2 | NTriplesFormatter double-escapes `%` in IRIs | closed | not run |
-| 24 | jsonld.js | JS | 206 | 2017 | C2 | N-Quads output does not escape IRIREF-forbidden characters | closed | not run |
+| 14 | RDF4J | Java | 1815 | 2020 | C1 | literal ending in a single quote mishandled | closed | executed on 2.5.5 and 3.0.0; still reproduces; fixed by 6.1.0 |
+| 15 | RDF4J | Java | 5521 | 2025 | C8 | explicit datatype lost in JSON-LD compaction | closed | not run (closed without a fix, §4.4) |
+| 16 | RDF4J | Java | 6084 | 2026 | C5 | TSV writer mangles numeric literals; NaN/INF re-parse as strings | open | executed on 6.1.0; still reproduces |
+| 17 | RDF4J | Java | 1535 | 2019 | C2 | writer emits a non-compliant escape inside an IRI; Rio rejects it | closed | executed on 2.5.5; still reproduces; fixed by 4.3.10 |
+| 18 | RDF4J | Java | 1317 | 2019 | C7 | `escapeUnicode` flag ignored, Unicode always escaped | closed | executed on 4.3.10 and 6.1.0; no longer triggers |
+| 19 | Oxigraph | Rust | 1859 | 2026 | C9 | malformed XML for a predicate with no QName local part, exit code 0 | closed | executed on 0.5.9 and 0.5.11; still reproduces |
+| 20 | dotNetRDF | C# | 903 | 2026 | C6 | list-root type assertion dropped at high compression; output not isomorphic | open | executed on 3.5.2; still reproduces |
+| 21 | dotNetRDF | C# | 70 | 2017 | C2 | NTriplesFormatter double-escapes `%` in IRIs | closed | not run (admission under review, §4.4) |
 
-Counts: 24 records, 6 libraries, 5 languages. Excluding the three records their maintainers closed without a fix (#5521, #659, #165): **21**. One further record (#3443) is carried with a flag and its admission is unsettled; excluding it as well gives 20 (§4.4). Four records withdrawn in this revision (#578, #2766, #3281, #3931) and one record excluded on a second reading (#1345) are released separately in `withdrawn_records.csv` and `excluded_candidates.csv`, and are not counted here. Rows are grouped by library for reading; the numbering here is for reference only and does not match the row order of `corpus_cross_library.csv`, whose order follows the build script.
+Counts: 21 records, 5 libraries, 5 languages. Excluding the three records their maintainers closed without a fix (#5521, #659, #165): **18**. One further record (#3443) is carried with a flag and its admission is unsettled; excluding it as well gives 17 (§4.4). Seven records withdrawn across revisions (#578, #2766, #3281, #3931, #206, #4929, #747) and one record excluded on a second reading (#1345) are released separately in `withdrawn_records.csv` and `excluded_candidates.csv`, and are not counted here. Rows are grouped by library for reading; the numbering here is for reference only and does not match the row order of `corpus_cross_library.csv`, whose order follows the build script.
 
 `state` is the issue state returned by the GitHub API at the time of the query (open or closed), as queried on 2026-10-11. Whether the defect still reproduces in the latest release is recorded separately, in `fix_evidence` and `runtime_repro`: a row may be `closed` and still carry `still live` evidence, and those are two different facts.
 

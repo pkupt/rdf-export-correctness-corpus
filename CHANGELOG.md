@@ -5,6 +5,139 @@ history was carried inside the manuscript, as a note on the title block; from
 v1.14 it lives here, so that the released manuscript reads as a finished paper
 and not as a working draft with its edit log attached.
 
+## v1.23 - 2026-10-13
+
+Bookkeeping. An external verification of v1.22 found the data clean, the
+withdrawals sound and the conclusions intact, but fifteen stale counts left
+behind by the v1.20-v1.22 revisions across four files, plus two precision points.
+No record was added or removed; this revision corrects the text.
+
+- `paper.md`: libraries with an admitted record (6 → **5**; jsonld.js is at zero
+  after #206); the 2026-10-13 executions named in §4.3 (five → **six**, adding
+  RDF4J #1317) and "executed for the journal revision" (seven → **six** — the
+  seventh was the #1395 re-run); the #3443 counterfactual in §4.4 (**20 / 17**,
+  was 22 / 19); the root-cause coverage in §7 (**nine of the twenty-one**, was
+  eleven of the twenty-four); the unmeasured count in §9.3 (**sixteen**, was
+  nineteen); the `withdrawn_records.csv` row in §11 (**7** withdrawn, split into
+  read-side and §3.4 grounds, no longer "all read-side"); §12's "23 defect
+  records" (→ **21**) and its unmeasured count (→ **sixteen**); and the count of
+  records left `not run` in this revision (**two**).
+- `corpus/README.md`: the file row counts and the headline block (24 / 21 / 20 →
+  **21 / 18 / 17**); the contributing-library sentence (**five of the seven**,
+  jsonld.js also at zero); the withdrawn row (**7**, with the read-side and §3.4
+  grounds separated); and the runtime split (**19** executed — 9 `reproduced`,
+  5 no longer triggering, 5 still reproducing).
+- `corpus/screening_protocol.md`: the #3443 counterfactual (**20 / 17**).
+- §4.4's #747 paragraph is narrowed to the point the reconstruction actually
+  makes — the quotation-mark escaping — and states why the later commit that
+  stopped escaping quotes (#789, merged 2017-04-01) does not rescue the report's
+  premise.
+- dotNetRDF #70's `runtime_repro` no longer reads "no .NET SDK": #903 was executed
+  on .NET 3.5.2 in the same revision, and #70 is carried with an
+  admission-under-review note, so the column now points at the note. Appendix A's
+  row follows.
+- Toolchain. `md2tex.py` maps `…` (U+2026) to `\ldots`; it had passed through raw
+  and rendered in the built PDF as a missing glyph in §4.4. `check_package.py`'s
+  page-count assertion is 28, matching the built PDF — it had claimed 27 because
+  the font and metadata checks are skipped when `pymupdf` is absent. With the
+  library installed the full check passes: 15 faces embedded, none Type 3.
+- `main.tex` and the built PDF are regenerated from this revision.
+
+## v1.22 - 2026-10-13
+
+Two more records withdrawn, on §3.4 exclusion grounds the author approved.
+
+- RDF4J #4929 is withdrawn: a reconstruction on 2.5.5, 4.3.10 and 6.1.0 produced
+  output isomorphic to the input, so the difference is one of compaction rather
+  than correctness, which §3.4 excludes (the rule that removed Oxigraph #1345 and
+  RDFLib #948).
+- RDF4J #747 is withdrawn: the report carries no minimal test case and a
+  reconstruction shows the escaping matching the TSV rules, so its premise is not
+  established.
+- Both join `withdrawn_records.csv` (now seven) and are named in §4.4. The main
+  table is 21 records, the headline **18**, the most conservative reading **17**;
+  §4.2 drops a C1 and a C3 record; §4.3 gives Java 5 records; §3.1, §5, §6.1,
+  §6.4, §6.6, §7.3 and Appendix A are updated. Figure 1 is redrawn.
+- dotNetRDF #70 is retained with an `admission under review` note (a
+  specification question), and RDF4J #5521 stays `not run` — so the two records
+  that remain unexecuted are #5521 and #70.
+
+## v1.21 - 2026-10-13
+
+The last four `not run` records are dispositioned. Three are re-read against the
+issue threads and one is executed.
+
+- RDF4J #1317 is executed (4.3.10 and 6.1.0: the `escapeUnicode` flag is honoured,
+  so the defect no longer triggers; the setting's class does not exist on the 2019
+  line, so no affected version was pinned). Executed count 18 → 19, `not run` 5 → 4.
+- RDF4J #4929, RDF4J #747 and dotNetRDF #70 are carried with an explicit
+  `admission under review` ground in `notes`: a reconstruction shows #4929's
+  output is isomorphic to its input (a compaction, not a correctness, difference),
+  #747's escaping conforms to the TSV rules, and #70's percent-escaping concerns a
+  bare `%` that is not a well-formed IRI. Whether they stay is left to the author.
+- §1.5, §4.1, §4.3, §9.2, §11, §12, the abstract and the two READMEs follow the
+  new 19/4 split.
+
+## v1.20 - 2026-10-13
+
+One record withdrawn, and every count that depends on the corpus size restated.
+
+- jsonld.js #206 is withdrawn: its reporter retracted the report on 2017-11-09 as a
+  misreading of the N-Quads grammar, so the record's premise does not hold and it
+  leaves the corpus under §3.4. It joins the withdrawn table (now five) and is named
+  in §4.4. The main table is 23 records, the headline **20**, the most conservative
+  reading **19**; §4.2 drops jsonld.js and C2 falls to 4; §4.3 gives JavaScript 5
+  records; §7.1 no longer cites the record. Figure 1 is redrawn over the five
+  contributing libraries, and the pool is five contributing libraries of seven.
+- §1.2, §1.3, §1.5, §4.1, §4.2, §4.3, §4.4, §5, §6.1, §6.6, §7.1, §9.2, §9.3, §11,
+  §12, the abstract, Appendix A, and the repository's `README.md`,
+  `corpus/README.md`, `corpus/screening_protocol.md` and `corpus/figures/make_figure1.py`
+  are updated to the new counts.
+
+## v1.19 - 2026-10-13
+
+Journal revision, second pass: three more records executed, the gap search
+upgraded to a systematic one.
+
+- Five records move from `not run` to `executed` (13 → 18 executed): RDF4J
+  #6084 (6.1.0), RDF4J #1535 (2.5.5, fixed by 4.3.10), RDF4J #1815 (2.5.5 and
+  3.0.0, fixed by 6.1.0), dotNetRDF #903 (3.5.2) and Oxigraph #1859 (0.5.9 and
+  0.5.11). Three of the five pin a version boundary. Every count that quotes
+  the execution split is updated across §1.5, §4.1, §4.3, §9.2, §11, §12, the
+  abstract, Appendix A, and the repository's `README.md`, `corpus/README.md`
+  and `corpus/screening_protocol.md`. Six records remain `not run`. Two
+  `notes` cells record later reading of the issue threads: jsonld.js #206 was
+  retracted by its reporter, and RDF4J #747 was closed without a test case.
+- §2.7 is upgraded from a quick search to a systematic one: a fixed query set
+  across arXiv, OpenAlex and Crossref (2026-10-13), with the DBLP and Semantic
+  Scholar gaps stated. The gap claim is unchanged.
+- The trigger-coverage row of §1.5 and the trigger passages of §3.5 and §9.3
+  are brought into line with the completed `trigger` column (v1.18).
+
+## v1.18 - 2026-10-13
+
+Journal revision: trigger coverage completed and scope welded into citable
+sentences. No count moves, and the corpus, the four tables and Figure 1 are
+untouched.
+
+- The `trigger` column is populated for all 24 records (previously 5). The 19
+  new triggers are extracted from the public issue text on 2026-10-13, each
+  traced to its source issue. The four records that did not reproduce on
+  re-test (§9.3) carry their reconstructed construction with the failure
+  recorded in `notes`.
+- Six wording surgeries weld scope into sentences that could be quoted out of
+  context (§6.2 ×2, §9.3 ×2, §6.1, §11): "no second implementation is needed"
+  becomes "in both records, exposing the disagreement required no second
+  implementation"; "buys nothing here" becomes "buys nothing on these five
+  records"; "structural rather than incidental" is attributed to RDFLib
+  #3426; "not being retired by time alone" gains "In this pool"; the missing
+  scripts are stated as a limitation of the artefact rather than a provenance
+  note. The abstract gains "The corpus supports existence claims, not
+  prevalence claims" ahead of the self-reported counts.
+- The journal submission line is opened: the arXiv preprint (v1.17) is the
+  baseline; this revision adds the missing trigger column and the wording
+  surgeries for the journal version.
+
 ## v1.17 - 2026-10-12
 
 - §10 gains a "Use of language models" note: a language model ran the

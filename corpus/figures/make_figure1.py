@@ -15,7 +15,7 @@ OUT = os.path.join(HERE, "figure1_class_by_library.svg")
 with open(CSV_PATH, encoding="utf-8") as f:
     rows = list(csv.DictReader(f))
 
-LIBS = ["RDFLib", "RDF4J", "N3.js", "Oxigraph", "dotNetRDF", "jsonld.js"]
+LIBS = ["RDFLib", "RDF4J", "N3.js", "Oxigraph", "dotNetRDF"]
 LANG = {"RDFLib": "Python", "RDF4J": "Java", "N3.js": "JavaScript",
         "Oxigraph": "Rust", "dotNetRDF": "C#", "jsonld.js": "JavaScript"}
 CLASSES = ["C%d" % i for i in range(1, 11)]
